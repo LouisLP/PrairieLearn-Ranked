@@ -8,18 +8,18 @@ const sqldb = require('@prairielearn/postgres');
 const sql = sqldb.loadSqlEquiv(__filename);
 
 router.get('/', function (req, res) {
-  res.locals.navPage = 'plrstaff';
+  res.locals.navPage = 'plrStaff';
   res.locals.isAuthenticated = !!res.locals.authn_user;
   const user = res.locals.authn_user.user_id;
   //this is temporary
   const liveScores = {};
 
   if (res.locals.isAuthenticated) {
-    console.log('staff.js: authenticated');
-    console.log('staff.js: user_id: ' + user);
+    console.log('plrStaff.js: authenticated');
+    console.log('plrStaff.js: user_id: ' + user);
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
   } else {
-    console.log('staff.js: not authenticated');
+    console.log('plrStaff.js: not authenticated');
   }
 });
 
