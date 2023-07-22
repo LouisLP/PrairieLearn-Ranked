@@ -1,26 +1,40 @@
-const ERR = require('async-stacktrace');
-const express = require('express');
-const router = express.Router();
+var ERR = require('async-stacktrace');
+var express = require('express');
+var router = express.Router();
 
-const { config } = require('../../lib/config');
-const sqldb = require('@prairielearn/postgres');
+var sqldb = require('@prairielearn/postgres');
 
-const sql = sqldb.loadSqlEquiv(__filename);
-
-router.get('/', function (req, res) {
-  res.locals.navPage = 'plrStudent';
-  res.locals.isAuthenticated = !!res.locals.authn_user;
-  const user = res.locals.authn_user.user_id;
-  //this is temporary
-  const liveScores = {};
-
-  if (res.locals.isAuthenticated) {
-    console.log('plrStudent.js: authenticated');
-    console.log('plrStudent.js: user_id: ' + user);
+var sql = sqldb.loadSqlEquiv(__filename);
+console.log(sql);
+// -------
+// ROUTING
+// -------
+router.get('/', function (req, res, next) {
+  getSeasonalResults(function(err, results) {
+    if (ERR(err, next)) return;
+    res.locals.seasonalResults = results;
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
-  } else {
-    console.log('plrStudent.js: not authenticated');
-  }
+  });
 });
+
+// ---------
+// FUNCTIONS
+// ---------
+// TODO: Function to get USER INFO (user_id as parameter)
+
+
+// TODO: Function to get LIVE RESULTS
+
+
+// Function to get SEASONAL RESULTS
+function getSeasonalResults(callback) {
+  sqldb.query(sql.get_seasonal_results, [], function(err, result) {
+      if (ERR(err, callback)) return;
+      callback(null, result.rows);
+  });
+}
+
+// TODO: Function to get ALL-TIME RESULTS
+
 
 module.exports = router;
