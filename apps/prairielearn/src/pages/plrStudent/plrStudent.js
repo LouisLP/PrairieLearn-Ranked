@@ -1,11 +1,11 @@
 var ERR = require('async-stacktrace');
+// Routing Stuff
 var express = require('express');
 var router = express.Router();
-
+// Query Stuff
 var sqldb = require('@prairielearn/postgres');
-
 var sql = sqldb.loadSqlEquiv(__filename);
-console.log(sql);
+
 // -------
 // ROUTING
 // -------
