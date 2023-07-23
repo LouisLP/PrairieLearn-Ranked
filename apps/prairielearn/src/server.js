@@ -628,14 +628,32 @@ module.exports.initExpress = function () {
     require('./middlewares/ansifySyncErrorsAndWarnings.js'),
   ]);
 
+  // -------------------------------
+  // PRAIRIELEARN RANKED (PLR) PAGES
+  // -------------------------------
+
   // PLR main page
-  app.use('/pl/course_instance/:course_instance_id/plr', [
+  app.use('/pl/course_instance/:course_instance_id/plrStudent', [
     function (req, res, next) {
-      res.locals.navSubPage = 'plr';
+      res.locals.navSubPage = 'plrStudent';
       next();
     },
-    require('./pages/plrHome/plrHome.js'),
+    require('./pages/plrStudent/plrStudent.js'),
   ]);
+
+  // PLR staff page (changed to instance_admin instead of course_admin)
+  // Originally on line 1220
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/plrStaff', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'plrStaff';
+      next();
+    },
+    require('./pages/plrStaff/plrStaff.js'),
+  ]);
+
+  // -----------------------------------
+  // END PRAIRIELEARN RANKED (PLR) PAGES
+  // -----------------------------------
 
   // Some course instance student pages only require course instance authorization (already checked)
   app.use(
@@ -1189,14 +1207,6 @@ module.exports.initExpress = function () {
     },
   );
 
-  // PLR staff page
-  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/plrstaff', [
-    function (req, res, next) {
-      res.locals.navSubPage = 'plrstaff';
-      next();
-    },
-    require('./pages/plrStaff/staff.js'),
-  ]);
   app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/settings', [
     function (req, res, next) {
       res.locals.navSubPage = 'settings';
