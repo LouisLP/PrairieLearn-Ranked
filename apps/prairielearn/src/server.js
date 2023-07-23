@@ -1214,7 +1214,7 @@ module.exports.initExpress = function () {
       res.locals.navSubPage = 'plrstaff';
       next();
     },
-    require('./pages/plrStaff/staff.js'),
+    require('./pages/plrStaff/plrStaff.js'),
   ]);
   app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/settings', [
     function (req, res, next) {
