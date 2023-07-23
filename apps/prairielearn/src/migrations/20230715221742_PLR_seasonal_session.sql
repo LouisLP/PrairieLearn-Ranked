@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS PLR_seasonal_session_CREDENTIALS (
     session_id INT NOT NULL,
     user_id BIGINT NOT NULL,
     points DOUBLE PRECISION DEFAULT 0,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    duration INTERVAL NOT NULL,
     FOREIGN KEY (session_id) REFERENCES PLR_seasonal_session (id),
     FOREIGN KEY (user_id) REFERENCES PLR_students (user_id)
 );

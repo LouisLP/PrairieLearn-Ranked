@@ -1207,6 +1207,15 @@ module.exports.initExpress = function () {
       next();
     },
   );
+
+  // PLR staff page
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/plrstaff', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'plrstaff';
+      next();
+    },
+    require('./pages/plrStaff/staff.js'),
+  ]);
   app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/settings', [
     function (req, res, next) {
       res.locals.navSubPage = 'settings';
