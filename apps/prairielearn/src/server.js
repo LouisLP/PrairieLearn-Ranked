@@ -641,10 +641,9 @@ module.exports.initExpress = function () {
     require('./pages/plrStudent/plrStudent.js'),
   ]);
 
-  // PLR staff page
-  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/plrStaff', [
-    require('./middlewares/authzAuthnHasCoursePreviewOrInstanceView'),
-    require('./middlewares/selectOpenIssueCount'),
+  // PLR staff page (changed to instance_admin instead of course_admin)
+  // Originally on line 1220
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/plrStaff', [
     function (req, res, next) {
       res.locals.navSubPage = 'plrStaff';
       next();
@@ -1208,14 +1207,6 @@ module.exports.initExpress = function () {
     },
   );
 
-  // PLR staff page
-  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/plrstaff', [
-    function (req, res, next) {
-      res.locals.navSubPage = 'plrstaff';
-      next();
-    },
-    require('./pages/plrStaff/plrStaff.js'),
-  ]);
   app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/settings', [
     function (req, res, next) {
       res.locals.navSubPage = 'settings';
