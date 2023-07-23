@@ -641,10 +641,6 @@ module.exports.initExpress = function () {
     },
     require('./pages/plrStudent/plrStudent.js'),
   ]);
-
-  // -----------------------------------
-  // END PRAIRIELEARN RANKED (PLR) PAGES
-  // -----------------------------------
   // Some course instance student pages only require course instance authorization (already checked)
   app.use(
     '/pl/course_instance/:course_instance_id/news_items',

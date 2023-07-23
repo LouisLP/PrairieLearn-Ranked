@@ -111,7 +111,8 @@
             e.stopPropagation(); // Keep click from changing sort
             $($(e.currentTarget).data('target')).modal('show');
         })
-    });
+    }); 
+    
     function gradeFormatter(score, row, index, field) {
         var assessment_instance_id = row[field + '_ai_id'];
         var other_users = _.escape(JSON.stringify(row[field + '_other']));
