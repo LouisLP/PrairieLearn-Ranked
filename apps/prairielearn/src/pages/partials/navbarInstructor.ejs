@@ -23,7 +23,7 @@
     <li class="nav-item <% if (navPage == "course_admin" && typeof navSubPage !== 'undefined' && navSubPage == "issues") { %>active<% } %>"><a class="nav-link" href="<%= urlPrefix %>/course_admin/issues">Issues <%- include('issueBadge', {count: navbarOpenIssueCount, suppressLink: true}) %></a></li>
     <li class="nav-item <% if (navPage == "course_admin" && typeof navSubPage !== 'undefined' && navSubPage == "questions") { %>active<% } %>"><a class="nav-link" href="<%= urlPrefix %>/course_admin/questions">Questions</a></li>
     <li class="nav-item <% if (navPage == "course_admin" && typeof navSubPage !== 'undefined' && navSubPage == "syncs") { %>active<% } %>"><a class="nav-link" href="<%= urlPrefix %>/course_admin/syncs">Sync</a></li>
-    <li class="nav-item <% if (navPage == "course_admin" && typeof navSubPage !== 'undefined' && navSubPage == "plrstaff") { %>active<% } %>"><a class="nav-link" href="<%= urlPrefix %>/course_admin/plrstaff">PLR Staff</a></li>
+    
 
     <% if (locals.course_instance) { %>
 
@@ -42,7 +42,7 @@
                             <a class="dropdown-item <% if (course_instance.id == ci.id) { %>active<% } %>" href="<%= plainUrlPrefix %>/course_instance/<%= ci.id %>/instructor/<%= navPage %><% if (typeof navSubPage !== 'undefined' && navSubPage != "file_edit") { %>/<%= navSubPage %><% } %>"><%= ci.short_name %></a>
                         <% } else { %>
                             <a class="dropdown-item <% if (course_instance.id == ci.id) { %>active<% } %>" href="<%= plainUrlPrefix %>/course_instance/<%= ci.id %>/instructor/instance_admin"><%= ci.short_name %></a>
-                        <% } %>
+                    <% } %>
                     <% }); %>
                 </div>
             <% } %>
@@ -52,7 +52,9 @@
         <li class="nav-item <% if (navPage == "instance_admin" && typeof navSubPage !== 'undefined' && navSubPage == "assessments") { %>active<% } %>"><a class="nav-link" href="<%= urlPrefix %>/instance_admin/assessments">Assessments</a></li>
 
         <li class="nav-item <% if (navPage == "instance_admin" && typeof navSubPage !== 'undefined' && navSubPage == "gradebook") { %>active<% } %>"><a class="nav-link" href="<%= urlPrefix %>/instance_admin/gradebook">Gradebook</a></li>
-
+        
+        <li class="nav-item <% if (navPage == "instance_admin" && typeof navSubPage !== 'undefined' && navSubPage == "plrstaff") { %>active<% } %>"><a class="nav-link" href="<%= urlPrefix %>/instance_admin/plrstaff">PLR Staff</a></li>
+        
         <% if (typeof assessment_label != 'undefined' && typeof assessment != 'undefined') { %>
             <li class="navbar-text mx-2 no-select">/</li>
             <li class="nav-item btn-group">

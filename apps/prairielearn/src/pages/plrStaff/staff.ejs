@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <%- include('../partials/head'); %>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
     <!-- Custom styling -->
     <%- compiled_stylesheet_tag('PLR.css') %>
     <!-- Favicon -->
@@ -14,10 +18,10 @@
     />
   </head>
   <body>
-    <%- include('../partials/navbar', {navPage: ''}); %>
+    <%- include('../partials/navbar'); %>
     <!-- Main content -->
     <main class="container">
-     <div class="row">
+      <div class="row">
         <!-- First column: Scoreboards -->
         <div class="col-md-7">
           <!-- <form action="/join-session" method="post">
@@ -25,8 +29,14 @@
               Join Live Session
             </button>
           </form> -->
-          <a href="/join-session" class="btn btn-dark rounded-pill join-session" id="nav-join-session-tab" role="tab" aria-controls="nav-join-session" aria-selected="false">
-
+          <a
+            href="/join-session"
+            class="btn btn-dark rounded-pill join-session"
+            id="nav-join-session-tab"
+            role="tab"
+            aria-controls="nav-join-session"
+            aria-selected="false"
+          >
             Join Live Session
           </a>
           <!-- Tabs to navigate between scoreboards -->
@@ -85,102 +95,100 @@
         <!-- Second column: Profile and Cards -->
         <!-- Second column: Profile and Cards -->
         <div class="maincardcontainer col-md-5 mt-3">
-            <!-- Quizzes -->
-            <%- include('../partials/plr/availableQuizzesList.ejs'); %>
+          <!-- Quizzes -->
+          <%- include('../partials/plr/availableQuizzesList.ejs'); %>
         </div>
-        
       </div>
     </main>
 
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
-    function formatTime(time) 
-    {
+      function formatTime(time) {
         const date = new Date(time);
         const hours = date.getHours().toString().padStart(2, '0');
         const minutes = date.getMinutes().toString().padStart(2, '0');
         const seconds = date.getSeconds().toString().padStart(2, '0');
         return `${hours}:${minutes}:${seconds}`;
-    }
+      }
     </script>
 
-<script>
-  function formatTime(time) {
-    const date = new Date(time);
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const seconds = date.getSeconds().toString().padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
-  }
-</script>
+    <script>
+      function formatTime(time) {
+        const date = new Date(time);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+      }
+    </script>
 
-<script>
-  // Join session
-  const joinSessionBtn = document.getElementById('join-session-btn');
-  joinSessionBtn.addEventListener('click', (event) => {
-    event.preventDefault();
-    window.location.href = '/join-session';
-    //more work to be done here
-  });
-</script>
-<script>
-  // // Establish a WebSocket connection
-  // const socket = io();
-  const userId = 1; // Get the user ID from the server
-  const studentId = 1; // Get the student ID from the server
-  // socket.emit('user connected', userId, studentId); // Send user ID to the server
-  // // Receive the list of connected users from the server
-  // socket.on('connected users', (users) => {
-  //   const currentUserElement = document.getElementById('current-user');
-  //   currentUserElement.textContent = `Connected users: ${users.length}`;
-  // });
-  // // Receive score updates from the server
-  // socket.on('score update', (data) => {
-  //   const { scoreData } = data;
-  //   console.log(data);
-  //   updateScores(scoreData);
-  // });
-  // Function to update the scores in the table
-  function updateScores(scores) {
-    const tableBody = document.querySelector('tbody');
-    tableBody.innerHTML = '';
-    if (scores.length === 0) {
-      const row = document.createElement('tr');
-      const cell = document.createElement('td');
-      cell.setAttribute('colspan', '5');
-      cell.textContent = 'No live scores available.';
-      row.appendChild(cell);
-      tableBody.appendChild(row);
-    }
-    scores.forEach((score, index) => {
-      const row = document.createElement('tr');
-      const rankCell = document.createElement('th');
-      const nameCell = document.createElement('td');
-      const achievementCell = document.createElement('td');
-      const scoreCell = document.createElement('td');
-      const timeCell = document.createElement('td');
-      rankCell.setAttribute('scope', 'row');
-      rankCell.textContent = index + 1;
-      nameCell.textContent = score.name;
-      achievementCell.textContent = score.achievements;
-      scoreCell.textContent = score.score;
-      var time = score.time;
-      var dateFormatTime = new Date(time);
-      timeCell.textContent =
-        dateFormatTime.getHours() +
-        ':' +
-        dateFormatTime.getMinutes() +
-        ':' +
-        dateFormatTime.getSeconds();
-      row.appendChild(rankCell);
-      row.appendChild(nameCell);
-      row.appendChild(achievementCell);
-      row.appendChild(scoreCell);
-      row.appendChild(timeCell);
-      tableBody.appendChild(row);
-    });
-  }
+    <script>
+      // Join session
+      const joinSessionBtn = document.getElementById('join-session-btn');
+      joinSessionBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.href = '/join-session';
+        //more work to be done here
+      });
+    </script>
+    <script>
+      // // Establish a WebSocket connection
+      // const socket = io();
+      const userId = 1; // Get the user ID from the server
+      const studentId = 1; // Get the student ID from the server
+      // socket.emit('user connected', userId, studentId); // Send user ID to the server
+      // // Receive the list of connected users from the server
+      // socket.on('connected users', (users) => {
+      //   const currentUserElement = document.getElementById('current-user');
+      //   currentUserElement.textContent = `Connected users: ${users.length}`;
+      // });
+      // // Receive score updates from the server
+      // socket.on('score update', (data) => {
+      //   const { scoreData } = data;
+      //   console.log(data);
+      //   updateScores(scoreData);
+      // });
+      // Function to update the scores in the table
+      function updateScores(scores) {
+        const tableBody = document.querySelector('tbody');
+        tableBody.innerHTML = '';
+        if (scores.length === 0) {
+          const row = document.createElement('tr');
+          const cell = document.createElement('td');
+          cell.setAttribute('colspan', '5');
+          cell.textContent = 'No live scores available.';
+          row.appendChild(cell);
+          tableBody.appendChild(row);
+        }
+        scores.forEach((score, index) => {
+          const row = document.createElement('tr');
+          const rankCell = document.createElement('th');
+          const nameCell = document.createElement('td');
+          const achievementCell = document.createElement('td');
+          const scoreCell = document.createElement('td');
+          const timeCell = document.createElement('td');
+          rankCell.setAttribute('scope', 'row');
+          rankCell.textContent = index + 1;
+          nameCell.textContent = score.name;
+          achievementCell.textContent = score.achievements;
+          scoreCell.textContent = score.score;
+          var time = score.time;
+          var dateFormatTime = new Date(time);
+          timeCell.textContent =
+            dateFormatTime.getHours() +
+            ':' +
+            dateFormatTime.getMinutes() +
+            ':' +
+            dateFormatTime.getSeconds();
+          row.appendChild(rankCell);
+          row.appendChild(nameCell);
+          row.appendChild(achievementCell);
+          row.appendChild(scoreCell);
+          row.appendChild(timeCell);
+          tableBody.appendChild(row);
+        });
+      }
     </script>
   </body>
 </html>

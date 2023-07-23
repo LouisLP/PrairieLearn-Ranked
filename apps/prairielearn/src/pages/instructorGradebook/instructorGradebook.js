@@ -23,7 +23,8 @@ const csvFilename = function (locals) {
 
 router.get('/', function (req, res, next) {
   res.locals.csvFilename = csvFilename(res.locals);
-
+  console.log('Gradebook NavPage: ' + res.locals.navPage);
+  console.log('Gradebook Sup Page: ' + res.locals.navSubPage);
   if (!res.locals.authz_data.has_course_instance_permission_view) {
     // We don't actually forbid access to this page if the user is not a student
     // data viewer, because we want to allow users to click the gradebook tab and
