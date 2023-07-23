@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS PLR_live_session (
     course_instance_id BIGINT NOT NULL,
     is_live BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
-    -- FOREIGN KEY (assess_id) REFERENCES assessments(id)
 );
 
 -- LIVE_SESSION_CREDENTIALS

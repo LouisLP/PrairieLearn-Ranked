@@ -2,7 +2,6 @@
 CREATE TABLE IF NOT EXISTS PLR_seasonal_session (
     id SERIAL PRIMARY KEY,
     course_instance_id BIGINT NOT NULL UNIQUE
-    -- FOREIGN KEY (course_instance_id) REFERENCES course_instances (id)
 );
 
 -- SEASONAL_SESSION_CREDENTIALS
