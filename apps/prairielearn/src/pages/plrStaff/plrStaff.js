@@ -11,8 +11,6 @@ router.get('/', function (req, res) {
   res.locals.navPage = 'plrStaff';
   res.locals.isAuthenticated = !!res.locals.authn_user;
   const user = res.locals.authn_user.user_id;
-  //this is temporary
-  const liveScores = {};
 
   if (res.locals.isAuthenticated) {
     console.log('plrStaff.js: authenticated');
