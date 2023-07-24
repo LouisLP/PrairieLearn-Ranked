@@ -1,0 +1,13 @@
+{
+  "description": "Insert data into the base PrairieLearn users table",
+  "params": [
+    {
+      "name": "uid",
+      "description": "The uid of the user"
+    },
+    {
+      "name": "name",
+      "description": "The name of the user"
+    }
+  ]
+}
