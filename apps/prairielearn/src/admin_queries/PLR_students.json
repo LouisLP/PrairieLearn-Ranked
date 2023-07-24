@@ -1,0 +1,28 @@
+{
+  "description": "Insert data into the PLR_students table",
+  "params": [
+    {
+      "name": "user_id",
+      "description": "The user_id to insert"
+    },
+    {
+      "name": "display_name",
+      "description": "The display name of the user"
+    },
+    {
+      "name": "color",
+      "description": "The color of the user",
+      "default": "NULL"
+    },
+    {
+      "name": "course_instance_id",
+      "description": "The course instance id for the user",
+      "default": "NULL"
+    },
+    {
+      "name": "live_score",
+      "description": "The live score for the user",
+      "default": "0"
+    }
+  ]
+}
