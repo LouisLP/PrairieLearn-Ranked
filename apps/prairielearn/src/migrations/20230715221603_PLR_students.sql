@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS PLR_students (
     display_name VARCHAR(256) NOT NULL,
     color VARCHAR(256),
     course_instance_id BIGINT,
-    live_score INT DEFAULT 0
+    total_score INT DEFAULT 0
 );
 
 -- This insert will grab every student in the DB when the table is made.
