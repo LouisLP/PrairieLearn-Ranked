@@ -47,14 +47,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- This trigger listens for updates on assessment instances
+-- This trigger listens for updates or inserts on assessment instances
 CREATE TRIGGER trigger_update_assessment_instances
-AFTER UPDATE ON assessment_instances
-FOR EACH ROW
-EXECUTE FUNCTION update_score_and_rank();
-
--- This trigger listens for inserts on assessment instances
-CREATE TRIGGER trigger_insert_assessment_instances
-AFTER INSERT ON assessment_instances
+AFTER UPDATE OR INSERT ON assessment_instances
 FOR EACH ROW
 EXECUTE FUNCTION update_score_and_rank();
