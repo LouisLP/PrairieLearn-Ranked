@@ -4,6 +4,6 @@ UPDATE
 SET
   is_live = FALSE
 WHERE
-  is_live = TRUE 
+  id = 1
 -- Return the updated rows
 RETURNING *;
