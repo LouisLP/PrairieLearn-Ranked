@@ -1,0 +1,5 @@
+{
+   "description": "End active (TRUE) live sessions, which should populate the seasonal scoreboard",
+   "params": []
+ }
+ 
