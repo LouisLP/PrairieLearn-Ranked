@@ -1,0 +1,4 @@
+{
+  "description": "Create 3 mock users, put them in a live session, give them random scores",
+  "params": []
+}
