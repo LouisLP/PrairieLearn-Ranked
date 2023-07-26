@@ -101,54 +101,23 @@
       </div>
     </main>
 
-    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // Establish an SSE connection
+      const source = new EventSource("/sse");
 
-    <script>
-      function formatTime(time) {
-        const date = new Date(time);
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
-        return `${hours}:${minutes}:${seconds}`;
-      }
-    </script>
+      // Receive the list of connected users from the server
+      source.addEventListener('connected', function(event) {
+        const data = JSON.parse(event.data);
+        const currentUserElement = document.getElementById('current-user');
+        currentUserElement.textContent = `Connected users: ${data.length}`;
+      }, false);
 
-    <script>
-      function formatTime(time) {
-        const date = new Date(time);
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const seconds = date.getSeconds().toString().padStart(2, '0');
-        return `${hours}:${minutes}:${seconds}`;
-      }
-    </script>
-
-    <script>
-      // Join session
-      const joinSessionBtn = document.getElementById('join-session-btn');
-      joinSessionBtn.addEventListener('click', (event) => {
-        event.preventDefault();
-        window.location.href = '/join-session';
-        //more work to be done here
-      });
-    </script>
-    <script>
-      // // Establish a WebSocket connection
-      // const socket = io();
-      const userId = 1; // Get the user ID from the server
-      const studentId = 1; // Get the student ID from the server
-      // socket.emit('user connected', userId, studentId); // Send user ID to the server
-      // // Receive the list of connected users from the server
-      // socket.on('connected users', (users) => {
-      //   const currentUserElement = document.getElementById('current-user');
-      //   currentUserElement.textContent = `Connected users: ${users.length}`;
-      // });
-      // // Receive score updates from the server
-      // socket.on('score update', (data) => {
-      //   const { scoreData } = data;
-      //   console.log(data);
-      //   updateScores(scoreData);
-      // });
+      // Receive score updates from the server
+      source.addEventListener('scores', function(event) {
+        const data = JSON.parse(event.data);
+        updateScores(data);
+      }, false);
+      
       // Function to update the scores in the table
       function updateScores(scores) {
         const tableBody = document.querySelector('tbody');
@@ -189,6 +158,19 @@
           tableBody.appendChild(row);
         });
       }
-    </script>
+      window.addEventListener('beforeunload', function() {
+        // Create a new request
+        var req = new XMLHttpRequest();
+
+        // Initialize the request
+        req.open('POST', '/sse/close', false); // `false` makes the request synchronous
+
+        // Get the clientId from the cookie
+        var clientId = document.cookie.replace(/(?:(?:^|.*;\s*)clientId\s*=\s*([^;]*).*$)|^.*$/, "$1");
+
+        // Send the client's ID in the body of the request
+        req.send(JSON.stringify({ id: clientId }));
+      });
+    </script> 
   </body>
 </html>

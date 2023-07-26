@@ -632,6 +632,690 @@ module.exports.initExpress = function () {
   // -------------------------------
   // PRAIRIELEARN RANKED STUDENT PAGE
   // -------------------------------
+
+
+  const sseClients = require('./sseClients');
+
+  // Assuming sqldb is your database connection
+  sqldb.on('notification', (message) => {
+    // Parse the payload and convert it to an object
+    const data = JSON.parse(message.payload);
+
+    // Send data to all connected clients
+    sseClients.sendToClients(data.newData);
+  });
+
+  // Add a new route handler for connection closed event
+  app.post('/sse/close', function(req, res) {
+    // Assuming the client sends its ID in the body of the request
+    const clientId = req.body.id;
+    
+    // Set the client's `closed` property to true
+    sseClients.closeClient(clientId);
+
+    // Send a response to acknowledge the request
+    res.sendStatus(200);
+  });
+
+  let clientId = 0;
+
+  app.get('/sse', function(req, res) {
+    clientId += 1;
+    const currentClientId = clientId;
+
+    // Set the clientId cookie
+    res.cookie('clientId', currentClientId);
+
+    req.on('close', function() {
+      sseClients.removeClient(currentClientId);
+    });
+
+    sseClients.addClient(currentClientId, res);
+  });
+
+
+  app.use('/pl/course_instance/:course_instance_id/plrStudent', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'plrStudent';
+      next();
+    },
+    require('./pages/plrStudent/plrStudent.js'),
+  ]);
+  
+  // Some course instance student pages only require course instance authorization (already checked)
+  app.use(
+    '/pl/course_instance/:course_instance_id/news_items',
+    require('./pages/news_items/news_items.js'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/news_item',
+    require('./pages/news_item/news_item.js'),
+  );
+
+  // Some course instance student pages only require the authn user to have permissions
+  app.use('/pl/course_instance/:course_instance_id/effectiveUser', [
+    require('./middlewares/authzAuthnHasCoursePreviewOrInstanceView'),
+    require('./pages/instructorEffectiveUser/instructorEffectiveUser'),
+  ]);
+
+  // All course instance instructor pages require the authn user to have permissions
+  app.use('/pl/course_instance/:course_instance_id/instructor', [
+    require('./middlewares/authzAuthnHasCoursePreviewOrInstanceView'),
+    require('./middlewares/selectOpenIssueCount'),
+    function (req, res, next) {
+      res.locals.navbarType = 'instructor';
+      next();
+    },
+    function (req, res, next) {
+      res.locals.urlPrefix = '/pl/course_instance/' + req.params.course_instance_id + '/instructor';
+      next();
+    },
+  ]);
+
+  // Some course instance instructor pages only require the authn user to have permissions (already checked)
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/effectiveUser',
+    require('./pages/instructorEffectiveUser/instructorEffectiveUser'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/news_items',
+    require('./pages/news_items/news_items.js'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/news_item',
+    require('./pages/news_item/news_item.js'),
+  );
+
+  // All other course instance student pages require the effective user to have permissions
+  app.use(
+    '/pl/course_instance/:course_instance_id',
+    require('./middlewares/authzHasCourseInstanceAccess'),
+  );
+
+  // All other course instance instructor pages require the effective user to have permissions
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor',
+    require('./middlewares/authzHasCoursePreviewOrInstanceView'),
+  );
+
+  // all pages under /pl/course require authorization
+  app.use('/pl/course/:course_id', [
+    require('./middlewares/authzCourseOrInstance'), // set res.locals.course
+    require('./middlewares/ansifySyncErrorsAndWarnings.js'),
+    require('./middlewares/selectOpenIssueCount'),
+    function (req, res, next) {
+      res.locals.navbarType = 'instructor';
+      next();
+    },
+    function (req, res, next) {
+      res.locals.urlPrefix = '/pl/course/' + req.params.course_id;
+      next();
+    },
+  ]);
+
+  // Serve element statics. As with core PrairieLearn assets and files served
+  // from `node_modules`, we include a cachebuster in the URL. This allows
+  // files to be treated as immutable in production and cached aggressively.
+  app.use(
+    '/pl/course_instance/:course_instance_id/cacheableElements/:cachebuster',
+    require('./pages/elementFiles/elementFiles'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/cacheableElements/:cachebuster',
+    require('./pages/elementFiles/elementFiles'),
+  );
+  app.use(
+    '/pl/course/:course_id/cacheableElements/:cachebuster',
+    require('./pages/elementFiles/elementFiles'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/cacheableElementExtensions/:cachebuster',
+    require('./pages/elementExtensionFiles/elementExtensionFiles'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/cacheableElementExtensions/:cachebuster',
+    require('./pages/elementExtensionFiles/elementExtensionFiles'),
+  );
+  app.use(
+    '/pl/course/:course_id/cacheableElementExtensions/:cachebuster',
+    require('./pages/elementExtensionFiles/elementExtensionFiles'),
+  );
+
+  // For backwards compatibility, we continue to serve the non-cached element
+  // files.
+  // TODO: if we can determine that these routes are no longer receiving
+  // traffic in the future, we can delete these.
+  //
+  // TODO: the only internal usage of this is in the `pl-drawing` element. Fix that.
+  app.use('/pl/static/elements', require('./pages/elementFiles/elementFiles'));
+  app.use(
+    '/pl/course_instance/:course_instance_id/elements',
+    require('./pages/elementFiles/elementFiles'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/elements',
+    require('./pages/elementFiles/elementFiles'),
+  );
+  app.use('/pl/course/:course_id/elements', require('./pages/elementFiles/elementFiles'));
+  app.use(
+    '/pl/course_instance/:course_instance_id/elementExtensions',
+    require('./pages/elementExtensionFiles/elementExtensionFiles'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/elementExtensions',
+    require('./pages/elementExtensionFiles/elementExtensionFiles'),
+  );
+  app.use(
+    '/pl/course/:course_id/elementExtensions',
+    require('./pages/elementExtensionFiles/elementExtensionFiles'),
+  );
+
+  //////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////
+  // API ///////////////////////////////////////////////////////////////
+
+  app.use('/pl/api/v1', require('./api/v1'));
+
+  if (isEnterprise()) {
+    app.use(
+      '/pl/institution/:institution_id/admin',
+      require('./ee/routers/institutionAdmin').default,
+    );
+  }
+
+  //////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////
+  // Instructor pages //////////////////////////////////////////////////
+
+  // single assessment
+  app.use('/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id', [
+    require('./middlewares/selectAndAuthzAssessment'),
+    require('./middlewares/ansifySyncErrorsAndWarnings.js'),
+    require('./middlewares/selectAssessments'),
+  ]);
+  app.use(
+    /^(\/pl\/course_instance\/[0-9]+\/instructor\/assessment\/[0-9]+)\/?$/,
+    (req, res, _next) => {
+      res.redirect(`${req.params[0]}/questions`);
+    },
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id',
+    function (req, res, next) {
+      res.locals.navPage = 'assessment';
+      next();
+    },
+  );
+  app.use('/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/settings', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'settings';
+      next();
+    },
+    require('./pages/instructorAssessmentSettings/instructorAssessmentSettings'),
+  ]);
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/questions',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'questions';
+        next();
+      },
+      require('./pages/instructorAssessmentQuestions/instructorAssessmentQuestions'),
+    ],
+  );
+  app.use('/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/groups', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'groups';
+      next();
+    },
+    require('./pages/instructorAssessmentGroups/instructorAssessmentGroups'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/access', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'access';
+      next();
+    },
+    require('./pages/instructorAssessmentAccess/instructorAssessmentAccess'),
+  ]);
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/assessment_statistics',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'assessment_statistics';
+        next();
+      },
+      require('./pages/instructorAssessmentStatistics/instructorAssessmentStatistics'),
+    ],
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/question_statistics',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'question_statistics';
+        next();
+      },
+      require('./pages/shared/assessmentStatDescriptions'),
+      require('./pages/shared/floatFormatters'),
+      require('./pages/instructorAssessmentQuestionStatistics/instructorAssessmentQuestionStatistics'),
+    ],
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/downloads',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'downloads';
+        next();
+      },
+      require('./pages/instructorAssessmentDownloads/instructorAssessmentDownloads'),
+    ],
+  );
+  app.use('/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/uploads', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'uploads';
+      next();
+    },
+    require('./pages/instructorAssessmentUploads/instructorAssessmentUploads'),
+  ]);
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/regrading',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'regrading';
+        next();
+      },
+      require('./pages/instructorAssessmentRegrading/instructorAssessmentRegrading'),
+    ],
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/instances',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'instances';
+        next();
+      },
+      require('./pages/instructorAssessmentInstances/instructorAssessmentInstances'),
+    ],
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/file_edit',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'file_edit';
+        next();
+      },
+      require('./pages/instructorFileEditor/instructorFileEditor'),
+    ],
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/file_view',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'file_view';
+        next();
+      },
+      require('./pages/instructorFileBrowser/instructorFileBrowser'),
+    ],
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/file_download',
+    require('./pages/instructorFileDownload/instructorFileDownload'),
+  );
+
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/manual_grading/assessment_question/:assessment_question_id',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'manual_grading';
+        next();
+      },
+      require('./middlewares/selectAndAuthzAssessmentQuestion'),
+      require('./pages/instructorAssessmentManualGrading/assessmentQuestion/assessmentQuestion'),
+    ],
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/manual_grading/instance_question/:instance_question_id',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'manual_grading';
+        next();
+      },
+      require('./middlewares/selectAndAuthzInstanceQuestion'),
+      require('./pages/instructorAssessmentManualGrading/instanceQuestion/instanceQuestion'),
+    ],
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/instance_question/:instance_question_id/clientFilesQuestion',
+    [
+      require('./middlewares/selectAndAuthzInstanceQuestion'),
+      require('./pages/clientFilesQuestion/clientFilesQuestion'),
+    ],
+  );
+
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/instance_question/:instance_question_id/generatedFilesQuestion',
+    [
+      require('./middlewares/selectAndAuthzInstanceQuestion'),
+      require('./pages/generatedFilesQuestion/generatedFilesQuestion'),
+    ],
+  );
+
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/instance_question/:instance_question_id/file',
+    [
+      require('./middlewares/selectAndAuthzInstanceQuestion'),
+      require('./pages/legacyQuestionFile/legacyQuestionFile'),
+    ],
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/instance_question/:instance_question_id/text',
+    [
+      require('./middlewares/selectAndAuthzInstanceQuestion'),
+      require('./pages/legacyQuestionText/legacyQuestionText'),
+    ],
+  );
+
+  // Submission files
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/instance_question/:instance_question_id/submission/:submission_id/file',
+    [
+      require('./middlewares/selectAndAuthzInstanceQuestion'),
+      require('./pages/submissionFile/submissionFile'),
+    ],
+  );
+
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment/:assessment_id/manual_grading',
+    [
+      function (req, res, next) {
+        res.locals.navSubPage = 'manual_grading';
+        next();
+      },
+      require('./pages/instructorAssessmentManualGrading/assessment/assessment'),
+    ],
+  );
+
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/assessment_instance/:assessment_instance_id',
+    [
+      require('./middlewares/selectAndAuthzAssessmentInstance'),
+      require('./pages/shared/floatFormatters'),
+      require('./pages/instructorAssessmentInstance/instructorAssessmentInstance'),
+    ],
+  );
+
+  // single question
+  app.use('/pl/course_instance/:course_instance_id/instructor/question/:question_id', [
+    require('./middlewares/selectAndAuthzInstructorQuestion'),
+    require('./middlewares/ansifySyncErrorsAndWarnings.js'),
+  ]);
+  app.use(
+    /^(\/pl\/course_instance\/[0-9]+\/instructor\/question\/[0-9]+)\/?$/,
+    (req, res, _next) => {
+      // Redirect legacy question URLs to their preview page.
+      // We need to maintain query parameters like `variant_id` so that the
+      // preview page can render the correct variant.
+      const newUrl = `${req.params[0]}/preview`;
+      const newUrlParts = url.parse(newUrl);
+      newUrlParts.query = req.query;
+      res.redirect(url.format(newUrlParts));
+    },
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/question/:question_id',
+    function (req, res, next) {
+      res.locals.navPage = 'question';
+      next();
+    },
+  );
+  app.use('/pl/course_instance/:course_instance_id/instructor/question/:question_id/settings', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'settings';
+      next();
+    },
+    require('./pages/instructorQuestionSettings/instructorQuestionSettings'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/question/:question_id/preview', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'preview';
+      next();
+    },
+    require('./pages/shared/floatFormatters'),
+    require('./pages/instructorQuestionPreview/instructorQuestionPreview'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/question/:question_id/statistics', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'statistics';
+      next();
+    },
+    require('./pages/shared/assessmentStatDescriptions'),
+    require('./pages/shared/floatFormatters'),
+    require('./pages/instructorQuestionStatistics/instructorQuestionStatistics'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/question/:question_id/file_edit', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'file_edit';
+      next();
+    },
+    require('./pages/instructorFileEditor/instructorFileEditor'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/question/:question_id/file_view', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'file_view';
+      next();
+    },
+    require('./pages/instructorFileBrowser/instructorFileBrowser'),
+  ]);
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/question/:question_id/file_download',
+    require('./pages/instructorFileDownload/instructorFileDownload'),
+  );
+
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/grading_job',
+    require('./pages/instructorGradingJob/instructorGradingJob'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/jobSequence',
+    require('./pages/instructorJobSequence/instructorJobSequence'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/loadFromDisk',
+    require('./pages/instructorLoadFromDisk/instructorLoadFromDisk'),
+  );
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/edit_error',
+    require('./pages/editError/editError'),
+  );
+
+  // course instance - course admin pages
+  app.use(/^(\/pl\/course_instance\/[0-9]+\/instructor\/course_admin)\/?$/, (req, res, _next) => {
+    res.redirect(`${req.params[0]}/instances`);
+  });
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/course_admin',
+    function (req, res, next) {
+      res.locals.navPage = 'course_admin';
+      next();
+    },
+  );
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/settings', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'settings';
+      next();
+    },
+    require('./pages/instructorCourseAdminSettings/instructorCourseAdminSettings'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/staff', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'staff';
+      next();
+    },
+    require('./pages/instructorCourseAdminStaff/instructorCourseAdminStaff'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/sets', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'sets';
+      next();
+    },
+    require('./pages/instructorCourseAdminSets/instructorCourseAdminSets'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/instances', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'instances';
+      next();
+    },
+    require('./pages/instructorCourseAdminInstances/instructorCourseAdminInstances'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/issues', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'issues';
+      next();
+    },
+    require('./pages/instructorIssues/instructorIssues'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/questions', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'questions';
+      next();
+    },
+    require('./pages/instructorQuestions/instructorQuestions'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/syncs', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'syncs';
+      next();
+    },
+    require('./pages/courseSyncs/courseSyncs'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/topics', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'topics';
+      next();
+    },
+    require('./pages/instructorCourseAdminTopics/instructorCourseAdminTopics'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/tags', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'tags';
+      next();
+    },
+    require('./pages/instructorCourseAdminTags/instructorCourseAdminTags'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/file_edit', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'file_edit';
+      next();
+    },
+    require('./pages/instructorFileEditor/instructorFileEditor'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/course_admin/file_view', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'file_view';
+      next();
+    },
+    require('./pages/instructorFileBrowser/instructorFileBrowser'),
+  ]);
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/course_admin/file_download',
+    require('./pages/instructorFileDownload/instructorFileDownload'),
+  );
+
+  // course instance - instance admin pages
+  app.use(/^(\/pl\/course_instance\/[0-9]+\/instructor\/instance_admin)\/?$/, (req, res, _next) => {
+    res.redirect(`${req.params[0]}/assessments`);
+  });
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/instance_admin',
+    function (req, res, next) {
+      res.locals.navPage = 'instance_admin';
+      next();
+    },
+    asyncHandler(async (req, res, next) => {
+      // The navigation tabs rely on this value to know when to show/hide the
+      // billing tab, so we need to load it for all instance admin pages.
+      const hasCourseInstanceBilling = await features.enabledFromLocals(
+        'course-instance-billing',
+        res.locals,
+      );
+      res.locals.billing_enabled = hasCourseInstanceBilling && isEnterprise();
+      next();
+    }),
+  );
+
+  // -------------------------------
+  // PRAIRIELEARN RANKED INSTRUCTOR PAGE
+  // -------------------------------
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/plrStaff', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'plrStaff';
+      next();
+    },
+    require('./pages/plrStaff/plrStaff.js'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/settings', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'settings';
+      next();
+    },
+    require('./pages/instructorInstanceAdminSettings/instructorInstanceAdminSettings'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/access', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'access';
+      next();
+    },
+    require('./pages/instructorInstanceAdminAccess/instructorInstanceAdminAccess'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/assessments', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'assessments';
+      next();
+    },
+    require('./pages/instructorAssessments/instructorAssessments'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/gradebook', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'gradebook';
+      next();
+    },
+    require('./pages/instructorGradebook/instructorGradebook'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/lti', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'lti';
+      next();
+    },
+    require('./pages/instructorInstanceAdminLti/instructorInstanceAdminLti'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/file_edit', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'file_edit';
+      next();
+    },
+    require('./pages/instructorFileEditor/instructorFileEditor'),
+  ]);
+  app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/file_view', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'file_view';
+      next();
+    },
+    require('./pages/instructorFileBrowser/instructorFileBrowser'),
+  ]);
+  app.use(
+    '/pl/course_instance/:course_instance_id/instructor/instance_admin/file_download',
+    require('./pages/instructorFileDownload/instructorFileDownload'),
+  );
+  if (isEnterprise()) {
+    app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/billing', [
+      function (req, res, next) {
+        res.locals.navSubPage = 'billing';
+        next();
+      },
+      require('./ee/pages/instructorInstanceAdminBilling/instructorInstanceAdminBilling').default,
+    ]);
+  }
   app.use('/pl/course_instance/:course_instance_id/plrStudent', [
     function (req, res, next) {
       res.locals.navSubPage = 'plrStudent';
