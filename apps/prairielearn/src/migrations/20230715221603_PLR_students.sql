@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS PLR_students (
     display_name VARCHAR(256) NOT NULL,
     color VARCHAR(256),
     course_instance_id BIGINT,
-    live_score INT DEFAULT 0
+    total_score INT DEFAULT 0
 );
 
 -- This insert will grab every student in the DB when the table is made.
@@ -26,10 +26,8 @@ WHERE
 CREATE OR REPLACE FUNCTION insert_student_from_users()
 RETURNS TRIGGER AS $$
 BEGIN
-  IF (NEW.user_id NOT IN (SELECT user_id FROM job_sequences)) THEN
     INSERT INTO PLR_students (user_id, display_name, course_instance_id)
     VALUES (NEW.user_id, NEW.name, NEW.lti_course_instance_id);
-  END IF;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
