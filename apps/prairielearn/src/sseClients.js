@@ -3,7 +3,7 @@ const clients = new Map();
 
 function addClient(res) {
   clients.set(clientId, res);
-  return clientId++;  // Increment the ID after returning
+  return clientId++; // Increment the ID after returning
 }
 
 function removeClient(id) {
@@ -11,9 +11,7 @@ function removeClient(id) {
 }
 
 function sendToClients(event, data) {
-  clients.forEach(client => 
-    client.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`)
-  );
+  clients.forEach((client) => client.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
 }
 
 function cleanupClients() {
@@ -32,4 +30,3 @@ module.exports = {
   sendToClients,
   cleanupClients,
 };
-

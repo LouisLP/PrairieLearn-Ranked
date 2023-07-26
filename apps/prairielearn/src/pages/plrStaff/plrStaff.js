@@ -22,22 +22,22 @@ router.get('/', function (req, res) {
   }
 });
 
-  router.get('/live_updates', (req, res) => {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
+router.get('/live_updates', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
 
-    // Add this client to the clients array and get its unique ID
-    const clientId = sseClients.addClient(res);
+  // Add this client to the clients array and get its unique ID
+  const clientId = sseClients.addClient(res);
 
-    // Include the client's unique ID in the body of the POST request
-    req.body.id = clientId;
+  // Include the client's unique ID in the body of the POST request
+  req.body.id = clientId;
 
-    // Remove this client from the clients array when the connection is closed
-    req.on('close', () => {
-      sseClients.removeClient(clientId);
-    });
+  // Remove this client from the clients array when the connection is closed
+  req.on('close', () => {
+    sseClients.removeClient(clientId);
   });
+});
 
 module.exports = router;
