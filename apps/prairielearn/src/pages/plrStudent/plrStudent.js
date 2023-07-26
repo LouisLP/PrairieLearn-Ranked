@@ -5,7 +5,7 @@ var router = express.Router();
 // Query Stuff
 var sqldb = require('@prairielearn/postgres');
 var sql = sqldb.loadSqlEquiv(__filename);
-var sseClients = require('../../sseClients')
+var sseClients = require('../../sseClients');
 
 // -------
 // ROUTING
@@ -31,14 +31,20 @@ router.get('/live_updates', (req, res) => {
   });
 });
 
-
 // MAIN PAGE
 router.get('/', function (req, res, next) {
-  getSeasonalResults(function(err, results) {
+  var params = {
+    course_instance_id: res.locals.course_instance.id,
+  };
+  getSeasonalResults(function (err, seasonalResults) {
     if (ERR(err, next)) return;
-    res.locals.seasonalResults = results;
-    res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
-  });
+    res.locals.seasonalResults = seasonalResults;
+  }, params);
+  getLiveResults(function (err, liveResults) {
+    if (ERR(err, next)) return;
+    res.locals.liveResults = liveResults;
+  }, params);
+  res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
 });
 
 // ---------
@@ -46,19 +52,22 @@ router.get('/', function (req, res, next) {
 // ---------
 // TODO: Function to get USER INFO (user_id as parameter)
 
-
 // TODO: Function to get LIVE RESULTS
 
-
 // Function to get SEASONAL RESULTS
-function getSeasonalResults(callback) {
-  sqldb.query(sql.get_seasonal_results, [], function(err, result) {
-      if (ERR(err, callback)) return;
-      callback(null, result.rows);
+function getSeasonalResults(callback, params) {
+  sqldb.query(sql.get_seasonal_results, params, function (err, result) {
+    if (ERR(err, callback)) return;
+    callback(null, result.rows);
+  });
+}
+function getLiveResults(callback, params) {
+  sqldb.query(sql.get_live_results, params, function (err, result) {
+    if (ERR(err, callback)) return;
+    callback(null, result.rows);
   });
 }
 
 // TODO: Function to get ALL-TIME RESULTS
-
 
 module.exports = router;

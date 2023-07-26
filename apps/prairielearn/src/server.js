@@ -632,47 +632,64 @@ module.exports.initExpress = function () {
   // -------------------------------
   // PRAIRIELEARN RANKED STUDENT PAGE
   // -------------------------------
-
-
+  const pg = require('pg');
   const sseClients = require('./sseClients');
+  // const plrStudent = require('./pages/plrStudent/plrStudent'); // import the router object
 
-  // Assuming sqldb is your database connection
-  sqldb.on('notification', (message) => {
+  const getLiveResults = require('./pages/plrStudent/plrStudentModel');
+  // const { router } = require('./pages/plrStudent/plrStudent');
+
+  // Create a new client with the same configuration as your pool
+  const pgClient = new pg.Client({
+    user: config.postgresqlUser,
+    database: config.postgresqlDatabase,
+    host: config.postgresqlHost,
+    password: config.postgresqlPassword,
+    idle_timeout_millis: config.postgresqlIdleTimeoutMillis,
+  });
+
+  pgClient.connect();
+
+  pgClient.on('notification', async (message) => {
     // Parse the payload and convert it to an object
     const data = JSON.parse(message.payload);
 
-    // Send data to all connected clients
-    sseClients.sendToClients(data.newData);
+    // Get the live results
+    const params = { course_instance_id: data.newData.course_instance_id }; // adjust this as necessary
+    getLiveResults((err, liveResults) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log('Live results:', liveResults);
+      // Send live results to all connected clients
+      sseClients.sendToClients('scores', liveResults);
+    }, params);
   });
+  pgClient.query('LISTEN table_change_notification');
 
   // Add a new route handler for connection closed event
-  app.post('/sse/close', function(req, res) {
+  app.post('/sse/close', function (req, res) {
     // Assuming the client sends its ID in the body of the request
     const clientId = req.body.id;
-    
+
     // Set the client's `closed` property to true
     sseClients.closeClient(clientId);
-
     // Send a response to acknowledge the request
     res.sendStatus(200);
   });
 
-  let clientId = 0;
-
-  app.get('/sse', function(req, res) {
-    clientId += 1;
-    const currentClientId = clientId;
+  app.get('/sse', function (req, res) {
+    const clientId = sseClients.addClient(res);
 
     // Set the clientId cookie
-    res.cookie('clientId', currentClientId);
+    res.cookie('clientId', clientId);
 
-    req.on('close', function() {
-      sseClients.removeClient(currentClientId);
+    // Remove this client when the connection is closed
+    req.on('close', function () {
+      sseClients.removeClient(clientId);
     });
-
-    sseClients.addClient(currentClientId, res);
   });
-
 
   app.use('/pl/course_instance/:course_instance_id/plrStudent', [
     function (req, res, next) {
@@ -681,7 +698,7 @@ module.exports.initExpress = function () {
     },
     require('./pages/plrStudent/plrStudent.js'),
   ]);
-  
+
   // Some course instance student pages only require course instance authorization (already checked)
   app.use(
     '/pl/course_instance/:course_instance_id/news_items',
@@ -1323,7 +1340,7 @@ module.exports.initExpress = function () {
     },
     require('./pages/plrStudent/plrStudent.js'),
   ]);
-  
+
   // Some course instance student pages only require course instance authorization (already checked)
   app.use(
     '/pl/course_instance/:course_instance_id/news_items',

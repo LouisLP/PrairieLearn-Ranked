@@ -2,12 +2,20 @@ let clientId = 0;
 const clients = new Map();
 
 function addClient(res) {
-  clients.set(clientId, res);
-  return clientId++; // Increment the ID after returning
-}
+  const id = clientId++;
+  clients.set(id, res);
 
+  // Send the "connected" event to all clients
+  const connectedData = clients.size; // get the number of connected clients
+  sendToClients('connected', connectedData); // send the connected event
+
+  return id; // return the clientId
+}
 function removeClient(id) {
-  clients.delete(id);
+  if (clients.has(id)) {
+    clients.get(id).end();
+    clients.delete(id);
+  }
 }
 
 function sendToClients(event, data) {
@@ -21,7 +29,6 @@ function cleanupClients() {
     }
   });
 }
-
 setInterval(cleanupClients, 1000 * 60); // Clean up every minute
 
 module.exports = {

@@ -137,23 +137,22 @@
       // Establish an SSE connection
       const source = new EventSource('/sse');
 
-      // Receive the list of connected users from the server
+      // Receive updates from the server
+      source.addEventListener(
+        'message',
+        function (event) {
+          const data = JSON.parse(event.data);
+          updateScores(data);
+        },
+        false,
+      );
+
       source.addEventListener(
         'connected',
         function (event) {
           const data = JSON.parse(event.data);
           const currentUserElement = document.getElementById('current-user');
-          currentUserElement.textContent = `Connected users: ${data.length}`;
-        },
-        false,
-      );
-
-      // Receive score updates from the server
-      source.addEventListener(
-        'scores',
-        function (event) {
-          const data = JSON.parse(event.data);
-          updateScores(data);
+          currentUserElement.textContent = `Connected users: ${data}`;
         },
         false,
       );
@@ -198,6 +197,7 @@
           tableBody.appendChild(row);
         });
       }
+
       window.addEventListener('beforeunload', function () {
         // Create a new request
         var req = new XMLHttpRequest();
