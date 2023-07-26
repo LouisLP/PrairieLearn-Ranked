@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
     if (ERR(err, next)) return;
     res.locals.seasonalResults = results;
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
-  });
+  }, res);
 });
 
 // ---------
@@ -27,8 +27,11 @@ router.get('/', function (req, res, next) {
 
 
 // Function to get SEASONAL RESULTS
-function getSeasonalResults(callback) {
-  sqldb.query(sql.get_seasonal_results, [], function(err, result) {
+function getSeasonalResults(callback, res) {
+  var params = {
+  course_instance_id: res.locals.course_instance.id,
+  };
+  sqldb.query(sql.get_seasonal_results, params, function(err, result) {
       if (ERR(err, callback)) return;
       callback(null, result.rows);
   });
