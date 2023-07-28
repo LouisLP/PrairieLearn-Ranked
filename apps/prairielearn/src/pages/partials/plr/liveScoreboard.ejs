@@ -4,18 +4,107 @@
   role="tabpanel"
   aria-labelledby="nav-live-scoreboard-tab"
 >
-  <div class="table-responsive">
-    <table class="table table-dark">
+  <h1>Live Results</h1>
+  <table class="table">
       <thead>
-        <tr>
-          <th scope="col">Rank</th>
-          <th scope="col">Name</th>
-          <th scope="col">Displayed Badges</th>
-          <th scope="col">Score</th>
-          <th scope="col">Time</th>
-        </tr>
+          <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Achievements</th>
+              <th scope="col">Score</th>
+              <th scope="col">Time</th>
+          </tr>
       </thead>
-      <tbody></tbody>
-    </table>
+      <tbody id="live-results">
+          <!-- The scoreboard updates will be appended here -->
+      </tbody>
+  </table>
   </div>
-</div>
+  <script>
+      const courseInstanceId = "<%= course_instance.id %>";
+      const source = new EventSource(`/pl/course_instance/${courseInstanceId}/plrStudent/live_updates`);
+
+
+      source.addEventListener('error', function(e) {
+      console.error('EventSource failed:', e);
+    });
+
+    source.onmessage = function (event) {
+      console.log('got a message from server!')
+    };
+
+      source.addEventListener(
+        'scores',
+        function (event) {
+          try {
+            const data = JSON.parse(event.data);
+            console.log('Receiving data: ', data);
+            updateScores(data);
+          } catch (error) {
+            console.error('Error parsing JSON: ', error);
+          }
+        },
+        false,
+      );
+
+      source.addEventListener(
+        'connected',
+        function (event) {
+          const data = JSON.parse(event.data);
+          const currentUserElement = document.getElementById('current-user');
+          currentUserElement.textContent = `Connected users: ${data}`;
+        },
+        false,
+      );
+
+    function updateScores(scores) {
+      const tableBody = document.querySelector('#live-results');
+      tableBody.innerHTML = '';
+      if (scores.length === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.setAttribute('colspan', '5');
+        cell.textContent = 'No live scores available.';
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+      }
+      scores.forEach((score, index) => {
+        const row = document.createElement('tr');
+        const rankCell = document.createElement('th'); const nameCell = document.createElement('td');
+        const achievementCell = document.createElement('td');
+        const scoreCell = document.createElement('td');
+        const timeCell = document.createElement('td');
+        rankCell.setAttribute('scope', 'row');
+        rankCell.textContent = score.rank;
+        nameCell.textContent = score.display_name;
+        achievementCell.textContent = ''; 
+        scoreCell.textContent = score.points;
+        var time = score.duration;
+        var dateFormatTime = new Date(time.minutes * 60 * 1000 + time.seconds * 1000 + time.milliseconds);
+        timeCell.textContent =
+          dateFormatTime.getHours() +
+          ':' +
+          dateFormatTime.getMinutes() +
+          ':' +
+          dateFormatTime.getSeconds();
+        row.appendChild(rankCell);
+        row.appendChild(nameCell);
+        row.appendChild(achievementCell);
+        row.appendChild(scoreCell);
+        row.appendChild(timeCell);
+        tableBody.appendChild(row);
+      });
+    }
+      window.addEventListener('beforeunload', function () {
+        var req = new XMLHttpRequest();
+
+        req.open('POST', '/sse/close', false); 
+
+        var clientId = document.cookie.replace(
+          /(?:(?:^|.*;\s*)clientId\s*=\s*([^;]*).*$)|^.*$/,
+          '$1',
+        );
+
+        req.send(JSON.stringify({ id: clientId }));
+      });
+    </script>

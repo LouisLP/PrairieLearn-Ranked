@@ -59,7 +59,7 @@ function getSeasonalResults(course_instance_id, callback) {
 
 // Function to get LIVE RESULTS
 function getLiveResults(course_instance_id, callback) {
-  sqldb.query(sql.get_live_results, [course_instance_id], function(err, result) {
+  sqldb.query(sql.get_live_results, [], function(err, result) {
       if (ERR(err, callback)) return;
       callback(null, result.rows);
   });
