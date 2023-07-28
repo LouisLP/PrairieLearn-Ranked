@@ -35,12 +35,15 @@ router.get('/', function (req, res, next) {
     res.locals.seasonalResults = seasonalResults;
   });
   
+  console.log('Sanity Check 1');
   getLiveResults(course_instance_id, function (err, liveResults) {
     if (ERR(err, next)) return;
     res.locals.liveResults = liveResults;
   });
-  
-  res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
+
+  setTimeout(function() {
+    res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
+  }, 500);
 });
 
 // ---------
