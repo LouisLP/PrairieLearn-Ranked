@@ -629,9 +629,69 @@ module.exports.initExpress = function () {
     require('./middlewares/ansifySyncErrorsAndWarnings.js'),
   ]);
 
+
+  // --------------------------- 
+  // PRAIRIELEARN RANKED CLIENTS
+  // --------------------------- 
+  const pg = require('pg');
+  const sseClients = require('./sseClients');
+  // const plrStudent = require('./pages/plrStudent/plrStudent'); // import the router object
+
+  const getLiveResults = require('./pages/plrStudent/plrStudentModel');
+  // const { router } = require('./pages/plrStudent/plrStudent');
+
+  // Create a new client with the same configuration as your pool
+  const pgClient = new pg.Client({
+    user: config.postgresqlUser,
+    database: config.postgresqlDatabase,
+    host: config.postgresqlHost,
+    password: config.postgresqlPassword,
+    idle_timeout_millis: config.postgresqlIdleTimeoutMillis,
+  });
+
+  pgClient.connect();
+
+  pgClient.on('notification', async (message) => {
+    // Parse the payload and convert it to an object
+    const data = JSON.parse(message.payload);
+
+    // Get the live results
+    const params = { course_instance_id: data.newData.course_instance_id }; // adjust this as necessary
+    getLiveResults((err, liveResults) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      //ignore error, just displays name of live results
+      // for(let i = 0; i < liveResults.length; i++) {
+      //   console.log('Live results:', liveResults[i].display_name);
+      // }
+      // Send live results to all connected clients
+      sseClients.sendToClients('scores', liveResults);
+      // console.log('live data sent!')
+    }, params);
+  });
+  
+  pgClient.query('LISTEN table_change_notification');
+
+  // Add a new route handler for connection closed event
+  app.post('/sse/close', function (req, res) {
+    // Assuming the client sends its ID in the body of the request
+    const clientId = req.body.id;
+
+    // Set the client's `closed` property to true
+    sseClients.closeClient(clientId);
+    // Send a response to acknowledge the request
+    res.sendStatus(200);
+  });
   // -------------------------------
+  // END PRAIRIELEARN RANKED CLIENTS
+  // -------------------------------
+
+  // ---------------------------------
   // PRAIRIELEARN RANKED STUDENT PAGE
-  // -------------------------------
+  // ---------------------------------
   app.use('/pl/course_instance/:course_instance_id/plrStudent', [
     function (req, res, next) {
       res.locals.navSubPage = 'plrStudent';
@@ -639,7 +699,11 @@ module.exports.initExpress = function () {
     },
     require('./pages/plrStudent/plrStudent.js'),
   ]);
-  
+  // ------------------------------------
+  // END PRAIRIELEARN RANKED STUDENT PAGE
+  // ------------------------------------
+
+
   // Some course instance student pages only require course instance authorization (already checked)
   app.use(
     '/pl/course_instance/:course_instance_id/news_items',
@@ -1202,9 +1266,10 @@ module.exports.initExpress = function () {
     }),
   );
 
-  // -------------------------------
-  // PRAIRIELEARN RANKED INSTRUCTOR PAGE
-  // -------------------------------
+
+  // ------------------------------
+  // PRAIRIELEARN RANKED STAFF PAGE
+  // ------------------------------
   app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/plrStaff', [
     function (req, res, next) {
       res.locals.navSubPage = 'plrStaff';
@@ -1212,6 +1277,10 @@ module.exports.initExpress = function () {
     },
     require('./pages/plrStaff/plrStaff.js'),
   ]);
+  // ----------------------------------
+  // END PRAIRIELEARN RANKED STAFF PAGE
+  // ----------------------------------
+  
   app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/settings', [
     function (req, res, next) {
       res.locals.navSubPage = 'settings';
