@@ -667,8 +667,8 @@ module.exports.initExpress = function () {
       //   console.log('Live results:', liveResults[i].display_name);
       // }
       // Send live results to all connected clients
-      console.log(liveResults)
       sseClients.sendToClients('scores', liveResults);
+      // console.log('live data sent!')
     }, params);
   });
   
