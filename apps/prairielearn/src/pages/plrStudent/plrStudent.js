@@ -28,17 +28,18 @@ router.get('/live_updates', (req, res) => {
 
 router.get('/', function (req, res, next) {
   // This route only handles rendering the page
-  var params = {
-    course_instance_id: res.locals.course_instance.id,
-  };
-  getSeasonalResults(function (err, seasonalResults) {
+  var course_instance_id = res.locals.course_instance.id;
+  
+  getSeasonalResults(course_instance_id, function (err, seasonalResults) {
     if (ERR(err, next)) return;
     res.locals.seasonalResults = seasonalResults;
-  }, params);
-  getLiveResults(function (err, liveResults) {
+  });
+  
+  getLiveResults(course_instance_id, function (err, liveResults) {
     if (ERR(err, next)) return;
     res.locals.liveResults = liveResults;
-  }, params);
+  });
+  
   res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
 });
 
@@ -48,21 +49,22 @@ router.get('/', function (req, res, next) {
 // TODO: Function to get USER INFO (user_id as parameter)
 
 
-// Function to get LIVE RESULTS
-function getLiveResults(callback, params) {
-  sqldb.query(sql.get_live_results, params, function (err, result) {
-    if (ERR(err, callback)) return;
-    callback(null, result.rows);
-  });
-}
-
 // Function to get SEASONAL RESULTS
-function getSeasonalResults(callback) {
-  sqldb.query(sql.get_seasonal_results, [], function(err, result) {
+function getSeasonalResults(course_instance_id, callback) {
+  sqldb.query(sql.get_seasonal_results, [course_instance_id], function(err, result) {
       if (ERR(err, callback)) return;
       callback(null, result.rows);
   });
 }
+
+// Function to get LIVE RESULTS
+function getLiveResults(course_instance_id, callback) {
+  sqldb.query(sql.get_live_results, [course_instance_id], function(err, result) {
+      if (ERR(err, callback)) return;
+      callback(null, result.rows);
+  });
+}
+
 
 // TODO: Function to get ALL-TIME RESULTS
 
