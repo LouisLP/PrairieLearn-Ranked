@@ -661,11 +661,17 @@ module.exports.initExpress = function () {
         console.error(err);
         return;
       }
-      console.log('Live results:', liveResults);
+
+      //ignore error, just displays name of live results
+      // for(let i = 0; i < liveResults.length; i++) {
+      //   console.log('Live results:', liveResults[i].display_name);
+      // }
       // Send live results to all connected clients
+      console.log(liveResults)
       sseClients.sendToClients('scores', liveResults);
     }, params);
   });
+  
   pgClient.query('LISTEN table_change_notification');
 
   // Add a new route handler for connection closed event
@@ -677,18 +683,6 @@ module.exports.initExpress = function () {
     sseClients.closeClient(clientId);
     // Send a response to acknowledge the request
     res.sendStatus(200);
-  });
-
-  app.get('/sse', function (req, res) {
-    const clientId = sseClients.addClient(res);
-
-    // Set the clientId cookie
-    res.cookie('clientId', clientId);
-
-    // Remove this client when the connection is closed
-    req.on('close', function () {
-      sseClients.removeClient(clientId);
-    });
   });
 
   app.use('/pl/course_instance/:course_instance_id/plrStudent', [

@@ -6,7 +6,6 @@ var router = express.Router();
 var sqldb = require('@prairielearn/postgres');
 var sql = sqldb.loadSqlEquiv(__filename);
 var sseClients = require('../../sseClients');
-
 // -------
 // ROUTING
 // -------
@@ -17,19 +16,21 @@ router.get('/live_updates', (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  res.flushHeaders();
-
+  
   // Add this client to the clients array and get its unique ID
   const clientId = sseClients.addClient(res);
 
-  // Include the client's unique ID in the body of the POST request
-  req.body.id = clientId;
+  // Set the clientId cookie
+  res.cookie('clientId', clientId);
 
-  // Remove this client from the clients array when the connection is closed
+  res.flushHeaders();
+
+  // Remove this client when the connection is closed
   req.on('close', () => {
     sseClients.removeClient(clientId);
   });
 });
+
 
 // MAIN PAGE
 router.get('/', function (req, res, next) {
@@ -46,6 +47,12 @@ router.get('/', function (req, res, next) {
   }, params);
   res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
 });
+
+// ---------
+// Get Live Updates
+// ---------
+
+
 
 // ---------
 // FUNCTIONS
