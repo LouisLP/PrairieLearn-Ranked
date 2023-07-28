@@ -1,34 +1,35 @@
-let clientId = 0;
-const clients = new Map();
+const clients = new Set();
 
-// Add a new client
+// ADD NEW CLIENT
 function addClient(res) {
-  const id = clientId++;
-  clients.set(id, res);
-  // Send the "connected" event to all clients
-  // Number of connected clients
+  clients.add(res);
+
+  // Send the number of connected clients to all clients
   const connectedData = clients.size; 
-  // Send the "connected" event
   sendToClients('connected', connectedData); 
 
-  return id;
+  return res;
 }
-// Remove an existing client (by id)
-function removeClient(id) {
-  if (clients.has(id)) {
-    clients.get(id).end();
-    clients.delete(id);
+
+// REMOVE CLIENT
+function removeClient(res) {
+  if (clients.has(res)) {
+    res.end();
+    clients.delete(res);
   }
 }
-// Send an event to all clients
+
+// SEND TO CLIENTS
 function sendToClients(event, data) {
   clients.forEach((client) => client.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
 }
-// Clean up closed connections
+
+// CLEAN UP CLIENTS
 function cleanupClients() {
-  clients.forEach((client, id) => {
-    if (client.closed) {
-      clients.delete(id);
+  clients.forEach((client) => {
+    if (client.finished) {
+      // If the response has been sent and finished
+      clients.delete(client);
     }
   });
 }
