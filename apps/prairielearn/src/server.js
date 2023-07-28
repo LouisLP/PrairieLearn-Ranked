@@ -629,9 +629,11 @@ module.exports.initExpress = function () {
     require('./middlewares/ansifySyncErrorsAndWarnings.js'),
   ]);
 
-  // -------------------------------
-  // PRAIRIELEARN RANKED STUDENT PAGE
-  // -------------------------------
+
+
+  // ---------------------------------------------------------------------------------------------
+  // PRAIRIELEARN RANKED CLIENTS
+  // ---------------------------------------------------------------------------------------------
   const pg = require('pg');
   const sseClients = require('./sseClients');
   // const plrStudent = require('./pages/plrStudent/plrStudent'); // import the router object
@@ -662,7 +664,7 @@ module.exports.initExpress = function () {
         return;
       }
 
-      //ignore error, just displays name of live results
+      // This for loop displays the live results in the console.
       // for(let i = 0; i < liveResults.length; i++) {
       //   console.log('Live results:', liveResults[i].display_name);
       // }
@@ -684,7 +686,13 @@ module.exports.initExpress = function () {
     // Send a response to acknowledge the request
     res.sendStatus(200);
   });
+  // ---------------------------------------------------------------------------------------------
 
+
+
+  // ---------------------------------------------------------------------------------------------
+  // PRAIRIELEARN RANKED STUDENT PAGE
+  // ---------------------------------------------------------------------------------------------
   app.use('/pl/course_instance/:course_instance_id/plrStudent', [
     function (req, res, next) {
       res.locals.navSubPage = 'plrStudent';
@@ -692,6 +700,9 @@ module.exports.initExpress = function () {
     },
     require('./pages/plrStudent/plrStudent.js'),
   ]);
+  // ---------------------------------------------------------------------------------------------
+
+
 
   // Some course instance student pages only require course instance authorization (already checked)
   app.use(
@@ -1255,9 +1266,11 @@ module.exports.initExpress = function () {
     }),
   );
 
-  // -------------------------------
+
+
+  // ---------------------------------------------------------------------------------------------
   // PRAIRIELEARN RANKED INSTRUCTOR PAGE
-  // -------------------------------
+  // ---------------------------------------------------------------------------------------------
   app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/plrStaff', [
     function (req, res, next) {
       res.locals.navSubPage = 'plrStaff';
@@ -1265,6 +1278,10 @@ module.exports.initExpress = function () {
     },
     require('./pages/plrStaff/plrStaff.js'),
   ]);
+  // ---------------------------------------------------------------------------------------------
+  
+
+
   app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/settings', [
     function (req, res, next) {
       res.locals.navSubPage = 'settings';
