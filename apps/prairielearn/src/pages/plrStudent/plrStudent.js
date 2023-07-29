@@ -35,7 +35,8 @@ router.get('/live_updates', (req, res) => {
 
 router.get('/', async function (req, res, next) {
   try {
-    res.locals.seasonalResults = await getSeasonalResults();
+    var course_instance_id = res.locals.course_instance.id;
+    res.locals.seasonalResults = await getSeasonalResults(course_instance_id);
     res.locals.liveResults = await getLiveResults();
 
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);

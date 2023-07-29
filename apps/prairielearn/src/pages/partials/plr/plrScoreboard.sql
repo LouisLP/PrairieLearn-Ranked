@@ -5,6 +5,8 @@ SELECT
 FROM
    PLR_live_session_CREDENTIALS
    JOIN PLR_students USING (user_id)
+WHERE
+   course_instance_id = $1
 ORDER BY
    points DESC;
 -- ENDBLOCK

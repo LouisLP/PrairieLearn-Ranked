@@ -30,11 +30,11 @@ router.get('/live_updates', (req, res) => {
 router.get('/', async function (req, res, next) {
   try {
     // Async Scoreboard Population
-    res.locals.seasonalResults = await getSeasonalResults();
+    var course_instance_id = res.locals.course_instance.id;
+    res.locals.seasonalResults = await getSeasonalResults(course_instance_id);
     res.locals.liveResults = await getLiveResults();
 
     // Non-Async Population
-    var course_instance_id = res.locals.course_instance.id;
 
     res.locals.quizzes = await getQuizzes(course_instance_id);
 

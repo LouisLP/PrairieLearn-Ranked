@@ -19,9 +19,9 @@ function getLiveResults() {
   });
 }
 // Function to get SEASONAL RESULTS
-function getSeasonalResults() {
+function getSeasonalResults(course_instance_id) {
   return new Promise((resolve, reject) => {
-    sqldb.query(sql.get_seasonal_results, [], function(err, result) {
+    sqldb.query(sql.get_seasonal_results, [course_instance_id], function(err, result) {
       if (err) {
         reject(err);
       } else {
