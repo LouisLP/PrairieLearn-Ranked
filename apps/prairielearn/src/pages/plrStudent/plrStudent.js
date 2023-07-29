@@ -43,12 +43,12 @@ router.get('/', async function (req, res, next) {
     console.log(err);
   }
 });
-
+// ---------
 // FUNCTIONS
 // ---------
-// TODO: Function to get USER INFO (user_id as parameter)
+// TODO: Function to get USER INFO
 
-// TODO: Function to get ALL-TIME RESULTS
+// TODO: Function to get ACHIEVEMENTS
 
 
 module.exports = router;

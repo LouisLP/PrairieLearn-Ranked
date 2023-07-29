@@ -20,5 +20,4 @@ FROM
    JOIN PLR_students USING (user_id)
 ORDER BY
    points DESC;
-
 -- ENDBLOCK
