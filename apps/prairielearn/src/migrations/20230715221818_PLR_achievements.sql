@@ -1,4 +1,4 @@
--- ACHIEVEMENTS (actual types of achievements)
+-- This table represents the achievements that a student can win.
 CREATE TABLE IF NOT EXISTS PLR_achievements (
     id SERIAL PRIMARY KEY,
     achievement_name VARCHAR(50) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS PLR_achievements (
     achievement_description VARCHAR(256)
 );
 
--- HAS_ACHIEVED (checks which achievements a student has won, and how many)
+-- This table represents the achievements that a student has won.
 CREATE TABLE IF NOT EXISTS PLR_has_achieved (
     user_id BIGINT,
     achievement_id BIGINT,

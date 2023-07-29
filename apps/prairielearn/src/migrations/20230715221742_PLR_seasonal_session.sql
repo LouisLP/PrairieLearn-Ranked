@@ -1,10 +1,10 @@
--- SEASONAL_SESSION
+-- This table represents semester.
 CREATE TABLE IF NOT EXISTS PLR_seasonal_session (
     id SERIAL PRIMARY KEY,
     course_instance_id BIGINT NOT NULL UNIQUE
 );
 
--- SEASONAL_SESSION_CREDENTIALS
+-- This table represents a students credentials for a semester.
 CREATE TABLE IF NOT EXISTS PLR_seasonal_session_CREDENTIALS (
     id SERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
