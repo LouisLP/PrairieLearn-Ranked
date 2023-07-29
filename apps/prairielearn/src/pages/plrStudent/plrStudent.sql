@@ -6,7 +6,7 @@ FROM
    PLR_seasonal_session_CREDENTIALS
    JOIN PLR_students USING (user_id)
 WHERE
-  course_instance_id = $1
+   course_instance_id = $1
 ORDER BY
    points DESC;
 -- ENDBLOCK
@@ -22,4 +22,17 @@ FROM
    JOIN PLR_students USING (user_id)
 ORDER BY
    points DESC;
+-- ENDBLOCK
+
+-- BLOCK get_quizzes
+SELECT
+    assessments.title,
+    assessments.id,
+    assessments.course_instance_id
+FROM
+    assessments JOIN assessment_sets
+    ON assessments.assessment_set_id = assessment_sets.id
+WHERE
+    assessment_sets.abbreviation = 'LV'
+    AND assessments.course_instance_id = $1;
 -- ENDBLOCK

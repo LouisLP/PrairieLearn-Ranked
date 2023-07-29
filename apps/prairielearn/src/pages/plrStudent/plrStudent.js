@@ -35,10 +35,14 @@ router.get('/', function (req, res, next) {
     res.locals.seasonalResults = seasonalResults;
   });
   
-  console.log('Sanity Check 1');
   getLiveResults(course_instance_id, function (err, liveResults) {
     if (ERR(err, next)) return;
     res.locals.liveResults = liveResults;
+  });
+
+  getQuizzes(course_instance_id, function (err, quizzes) {
+    if (ERR(err, next)) return;
+    res.locals.quizzes = quizzes;
   });
 
   setTimeout(function() {
@@ -49,8 +53,6 @@ router.get('/', function (req, res, next) {
 // ---------
 // FUNCTIONS
 // ---------
-// TODO: Function to get USER INFO (user_id as parameter)
-
 
 // Function to get SEASONAL RESULTS
 function getSeasonalResults(course_instance_id, callback) {
@@ -68,8 +70,14 @@ function getLiveResults(course_instance_id, callback) {
   });
 }
 
-
 // TODO: Function to get ALL-TIME RESULTS
 
+// Function to get QUIZZES (With "LV" tag)
+function getQuizzes(course_instance_id, callback) {
+  sqldb.query(sql.get_quizzes, [course_instance_id], function(err, result) {
+    if (ERR(err, callback)) return;
+    callback(null, result.rows);
+  });
+}
 
 module.exports = router;
