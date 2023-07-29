@@ -1,9 +1,8 @@
-var ERR = require('async-stacktrace');
 var sqldb = require('@prairielearn/postgres');
 
 const path = require('path');
 // Construct the path to plrStudent.sql
-const sqlFilePath = path.join(__dirname, 'plrStudent.js');
+const sqlFilePath = path.join(__dirname, 'plrScoreboard.js');
 
 var sql = sqldb.loadSqlEquiv(sqlFilePath);
 
