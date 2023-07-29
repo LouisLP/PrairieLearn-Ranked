@@ -3,14 +3,13 @@ CREATE TABLE IF NOT EXISTS PLR_students (
     user_id BIGINT PRIMARY KEY,
     display_name VARCHAR(256) NOT NULL,
     color VARCHAR(256),
-    course_instance_id BIGINT,
     total_score INT DEFAULT 0
 );
 
 -- This insert will grab every student in the DB when the table is made.
-INSERT INTO PLR_students (user_id, display_name, course_instance_id)
+INSERT INTO PLR_students (user_id, display_name)
 SELECT 
-    user_id, name, lti_course_instance_id
+    user_id, name
 FROM
     users
 WHERE
@@ -26,8 +25,9 @@ WHERE
 CREATE OR REPLACE FUNCTION insert_student_from_users()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO PLR_students (user_id, display_name, course_instance_id)
-    VALUES (NEW.user_id, NEW.name, NEW.lti_course_instance_id);
+    INSERT INTO PLR_students (user_id, display_name)
+    VALUES (NEW.user_id, NEW.name);
+
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

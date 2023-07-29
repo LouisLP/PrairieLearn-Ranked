@@ -655,10 +655,10 @@ module.exports.initExpress = function () {
   pgClient.on('notification', async (message) => {
     // Parse the payload and convert it to an object
     const data = JSON.parse(message.payload);
-
+    console.log('Received notification in server.js');
     // Get the live results
     try {
-      const liveResults = await getLiveResults(data.newData.course_instance_id);
+      const liveResults = await getLiveResults();
       sseClients.sendToClients('scores', liveResults);
     } catch (err) {
       console.log(err);
