@@ -1,4 +1,4 @@
--- This table is used to store the total score of each student.
+-- This trigger is used to store the total score of each student.
 CREATE OR REPLACE FUNCTION update_total_score()
 RETURNS TRIGGER AS $$
 BEGIN
