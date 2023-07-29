@@ -637,7 +637,7 @@ module.exports.initExpress = function () {
   const sseClients = require('./sseClients');
   // const plrStudent = require('./pages/plrStudent/plrStudent'); // import the router object
 
-  const getLiveResults = require('./pages/plrStudent/plrStudentModel');
+  const { getLiveResults } = require('./pages/plrStudent/plrStudentModel');
   // const { router } = require('./pages/plrStudent/plrStudent');
 
   // Create a new client with the same configuration as your pool
@@ -651,28 +651,20 @@ module.exports.initExpress = function () {
 
   pgClient.connect();
 
+    // Parse the payload and convert it to an object
   pgClient.on('notification', async (message) => {
     // Parse the payload and convert it to an object
     const data = JSON.parse(message.payload);
 
     // Get the live results
-    const params = { course_instance_id: data.newData.course_instance_id }; // adjust this as necessary
-    getLiveResults((err, liveResults) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-
-      //ignore error, just displays name of live results
-      // for(let i = 0; i < liveResults.length; i++) {
-      //   console.log('Live results:', liveResults[i].display_name);
-      // }
-      // Send live results to all connected clients
+    try {
+      const liveResults = await getLiveResults(data.newData.course_instance_id);
       sseClients.sendToClients('scores', liveResults);
-      // console.log('live data sent!')
-    }, params);
+    } catch (err) {
+      console.log(err);
+    }
   });
-  
+    
   pgClient.query('LISTEN table_change_notification');
 
   // Add a new route handler for connection closed event
