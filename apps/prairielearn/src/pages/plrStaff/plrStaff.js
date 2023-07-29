@@ -1,24 +1,52 @@
-const ERR = require('async-stacktrace');
-const express = require('express');
-const router = express.Router();
+import { reject } from 'lodash';
 
-const { config } = require('../../lib/config');
-const sqldb = require('@prairielearn/postgres');
+var ERR = require('async-stacktrace');
+// Routing Stuff
+var express = require('express');
+var router = express.Router();
+// Query Stuff
+// var sqldb = require('@prairielearn/postgres');
+// var path = require('path');
+//
+// var sqlFilePath = path.join(__dirname, '../partials/plr/plrScoreboard.sql');
+// var sql = sqldb.loadSqlEquiv(sqlFilePath);
+// SSE Stuff
+var sseClients = require('../../sseClients');
+// Models
+const { getLiveResults } = require('../partials/plr/plrScoreboardModel')
+const { getSeasonalResults } = require('../partials/plr/plrScoreboardModel')
+// -------
+// ROUTING
+// -------
+router.get('/live_updates', (req, res) => {
+  // This is the new SSE-specific route
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
 
-const sql = sqldb.loadSqlEquiv(__filename);
+  const clientRes = sseClients.addClient(res);
 
-router.get('/', function (req, res) {
-  res.locals.navPage = 'plrStaff';
-  res.locals.isAuthenticated = !!res.locals.authn_user;
-  const user = res.locals.authn_user.user_id;
+  req.on('close', () => {
+    sseClients.removeClient(clientRes);
+  });
 
-  if (res.locals.isAuthenticated) {
-    console.log('plrStaff.js: authenticated');
-    console.log('plrStaff.js: user_id: ' + user);
+  res.flushHeaders();
+});
+
+router.get('/', async function (req, res, next) {
+  try {
+    res.locals.seasonalResults = await getSeasonalResults();
+    res.locals.liveResults = await getLiveResults();
+
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
-  } else {
-    console.log('plrStaff.js: not authenticated');
+  } catch (err) {
+    console.log(err);
   }
 });
+// ---------
+// FUNCTIONS
+// ---------
+// TODO: Function to populate available quizzes
+
 
 module.exports = router;
