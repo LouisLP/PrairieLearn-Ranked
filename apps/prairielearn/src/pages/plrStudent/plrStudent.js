@@ -1,3 +1,5 @@
+import { reject } from 'lodash';
+
 var ERR = require('async-stacktrace');
 // Routing Stuff
 var express = require('express');
@@ -26,24 +28,22 @@ router.get('/live_updates', (req, res) => {
   res.flushHeaders();
 });
 
-router.get('/', function (req, res, next) {
-  // This route only handles rendering the page
-  var course_instance_id = res.locals.course_instance.id;
-  
-  getSeasonalResults(course_instance_id, function (err, seasonalResults) {
-    if (ERR(err, next)) return;
-    res.locals.seasonalResults = seasonalResults;
-  });
-  
-  console.log('Sanity Check 1');
-  getLiveResults(course_instance_id, function (err, liveResults) {
-    if (ERR(err, next)) return;
-    res.locals.liveResults = liveResults;
-  });
-
-  setTimeout(function() {
+router.get('/', async function (req, res, next) {
+  try {
+    console.log('Promise check');
+    var course_instance_id = res.locals.course_instance.id;
+    res.locals.seasonalResults = await getSeasonalResults(course_instance_id);
+    res.locals.liveResults = await getLiveResults(course_instance_id);
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
-  }, 500);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// error handling middleware that accepts the error passed through next()
+router.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
 });
 
 // ---------
@@ -53,18 +53,27 @@ router.get('/', function (req, res, next) {
 
 
 // Function to get SEASONAL RESULTS
-function getSeasonalResults(course_instance_id, callback) {
-  sqldb.query(sql.get_seasonal_results, [course_instance_id], function(err, result) {
-      if (ERR(err, callback)) return;
-      callback(null, result.rows);
+function getSeasonalResults(course_instance_id) {
+  return new Promise((resolve, reject) => {
+    sqldb.query(sql.get_seasonal_results, [course_instance_id], function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.rows);
+      }
+    });
   });
 }
-
 // Function to get LIVE RESULTS
-function getLiveResults(course_instance_id, callback) {
-  sqldb.query(sql.get_live_results, [], function(err, result) {
-      if (ERR(err, callback)) return;
-      callback(null, result.rows);
+function getLiveResults(course_instance_id) {
+  return new Promise((resolve, reject) => {
+    sqldb.query(sql.get_live_results, [], function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.rows)
+      }
+    });
   });
 }
 

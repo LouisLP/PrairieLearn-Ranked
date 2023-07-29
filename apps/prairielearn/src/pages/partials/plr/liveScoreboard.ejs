@@ -24,10 +24,8 @@
 </div>
 <script>
   
-  setTimeout(function() {
-        results = <%- JSON.stringify(locals.liveResults) %>;
-        updateScores(results);
-      }, 500);
+  results = <%- JSON.stringify(locals.liveResults) %>;
+  updateScores(results);
 
   const courseInstanceId = '<%= course_instance.id %>';
   const source = new EventSource(`/pl/course_instance/${courseInstanceId}/plrStudent/live_updates`);
