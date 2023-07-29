@@ -1,4 +1,3 @@
-var ERR = require('async-stacktrace');
 // Routing Stuff
 var express = require('express');
 var router = express.Router();
@@ -37,10 +36,7 @@ router.get('/', async function (req, res, next) {
     // Non-Async Population
     var course_instance_id = res.locals.course_instance.id;
 
-    getQuizzes(course_instance_id, function (err, quizzes) {
-      if (ERR(err, next)) return;
-      res.locals.quizzes = quizzes;
-    });
+    res.locals.quizzes = await getQuizzes(course_instance_id);
 
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
   } catch (err) {
@@ -51,10 +47,15 @@ router.get('/', async function (req, res, next) {
 // FUNCTIONS
 // ---------
 // Function to get QUIZZES (With "LV" tag)
-function getQuizzes(course_instance_id, callback) {
-  sqldb.query(sql.get_quizzes, [course_instance_id], function (err, result) {
-    if (ERR(err, callback)) return;
-    callback(null, result.rows);
+function getQuizzes(course_instance_id) { 
+  return new Promise((resolve, reject) => {
+    sqldb.query(sql.get_quizzes, [course_instance_id], function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.rows);
+      }
+    });
   });
 }
 
