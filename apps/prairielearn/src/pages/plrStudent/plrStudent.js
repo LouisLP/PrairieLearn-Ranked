@@ -32,9 +32,9 @@ router.get('/live_updates', (req, res) => {
 
 router.get('/', async function (req, res, next) {
   try {
-    var course_instance_id = res.locals.course_instance.id;
-    res.locals.seasonalResults = await getSeasonalResults(course_instance_id);
-    res.locals.liveResults = await getLiveResults(course_instance_id);
+    res.locals.seasonalResults = await getSeasonalResults();
+    res.locals.liveResults = await getLiveResults();
+
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
   } catch (err) {
     console.log(err);

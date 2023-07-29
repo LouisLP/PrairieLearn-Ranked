@@ -3,10 +3,8 @@ SELECT
    display_name,
    points
 FROM
-   PLR_seasonal_session_CREDENTIALS
-   JOIN PLR_students USING (user_id)
-WHERE
-  course_instance_id = $1
+   PLR_live_session_CREDENTIALS
+   JOIN PLR_students USING (user_id);
 ORDER BY
    points DESC;
 -- ENDBLOCK
@@ -19,9 +17,8 @@ SELECT
    duration
 FROM
    PLR_live_session_CREDENTIALS
-   JOIN PLR_students USING (user_id)
-WHERE 
-  course_instance_id = $1
+   JOIN PLR_students USING (user_id);
 ORDER BY
    points DESC;
+
 -- ENDBLOCK
