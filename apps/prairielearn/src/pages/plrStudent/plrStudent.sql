@@ -4,7 +4,7 @@ SELECT
    points
 FROM
    PLR_live_session_CREDENTIALS
-   JOIN PLR_students USING (user_id);
+   JOIN PLR_students USING (user_id)
 ORDER BY
    points DESC;
 -- ENDBLOCK
@@ -17,7 +17,7 @@ SELECT
    duration
 FROM
    PLR_live_session_CREDENTIALS
-   JOIN PLR_students USING (user_id);
+   JOIN PLR_students USING (user_id)
 ORDER BY
    points DESC;
 
