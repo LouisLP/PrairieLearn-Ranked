@@ -27,7 +27,7 @@ BEGIN
             ELSE
                 -- If the user_id doesn't exist, insert a new row
                 INSERT INTO PLR_seasonal_session_credentials (session_id, user_id, points, duration)
-                SELECT id, cred.user_id, cred.points, cred.duration)
+                SELECT id, cred.user_id, cred.points, cred.duration
                 FROM PLR_seasonal_session
                 WHERE course_instance_id = NEW.course_instance_id;
             END IF;
