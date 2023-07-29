@@ -635,10 +635,8 @@ module.exports.initExpress = function () {
   // --------------------------- 
   const pg = require('pg');
   const sseClients = require('./sseClients');
-  // const plrStudent = require('./pages/plrStudent/plrStudent'); // import the router object
 
-  const { getLiveResults } = require('./pages/plrStudent/plrStudentModel');
-  // const { router } = require('./pages/plrStudent/plrStudent');
+  const { getLiveResults } = require('./pages/partials/plr/plrScoreboardModel');
 
   // Create a new client with the same configuration as your pool
   const pgClient = new pg.Client({
