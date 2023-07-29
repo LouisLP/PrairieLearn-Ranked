@@ -7,11 +7,31 @@ const sqlFilePath = path.join(__dirname, 'plrStudent.js');
 
 var sql = sqldb.loadSqlEquiv(sqlFilePath);
 
-function getLiveResults(callback, course_instance_id) {
-  sqldb.query(sql.get_live_results, [], function (err, result) {
-    if (ERR(err, callback)) return;
-    callback(null, result.rows);
+// Function to get SEASONAL RESULTS
+function getSeasonalResults(course_instance_id) {
+  return new Promise((resolve, reject) => {
+    sqldb.query(sql.get_seasonal_results, [course_instance_id], function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.rows);
+      }
+    });
+  });
+}
+function getLiveResults(course_instance_id) {
+  return new Promise((resolve, reject) => {
+    sqldb.query(sql.get_live_results, [course_instance_id], function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.rows)
+      }
+    });
   });
 }
 
-module.exports = getLiveResults;
+module.exports = { 
+  getLiveResults,
+  getSeasonalResults
+};
