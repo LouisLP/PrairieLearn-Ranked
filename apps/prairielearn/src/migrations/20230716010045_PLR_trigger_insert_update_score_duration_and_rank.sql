@@ -6,7 +6,7 @@ BEGIN
     FROM PLR_live_session_credentials
   ) THEN
     UPDATE PLR_live_session_credentials 
-    SET points = NEW.points, duration = NEW.duration
+    SET points = NEW.points * 3628, duration = NEW.duration
     WHERE
       PLR_live_session_credentials.assessment_instance_id = NEW.id;
 
@@ -17,7 +17,7 @@ BEGIN
   ) THEN
     INSERT INTO PLR_live_session_credentials (points, session_id, duration, user_id, assessment_instance_id)
     SELECT
-      NEW.points,
+      NEW.points * 3628,
       PLR_live_session.id,
       NEW.duration,
       NEW.user_id,
