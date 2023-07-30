@@ -4,12 +4,6 @@ var ERR = require('async-stacktrace');
 // Routing Stuff
 var express = require('express');
 var router = express.Router();
-// Query Stuff
-// var sqldb = require('@prairielearn/postgres');
-// var path = require('path');
-//
-// var sqlFilePath = path.join(__dirname, '../partials/plr/plrScoreboard.sql');
-// var sql = sqldb.loadSqlEquiv(sqlFilePath);
 // SSE Stuff
 var sseClients = require('../../sseClients');
 // Models
