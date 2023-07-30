@@ -2,7 +2,8 @@
 CREATE TABLE IF NOT EXISTS PLR_seasonal_session (
     id SERIAL PRIMARY KEY,
     course_instance_id BIGINT NOT NULL UNIQUE,
-    course_id BIGINT NOT NULL
+    course_id BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 -- This table represents a students credentials for a semester.

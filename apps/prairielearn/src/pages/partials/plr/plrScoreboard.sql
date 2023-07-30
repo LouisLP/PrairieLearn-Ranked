@@ -15,7 +15,8 @@ ORDER BY
 -- BLOCK get_alltime_results
 SELECT
    display_name,
-   points
+   points,
+   created_at
 FROM
    PLR_seasonal_session_CREDENTIALS
    JOIN PLR_students USING (user_id)
