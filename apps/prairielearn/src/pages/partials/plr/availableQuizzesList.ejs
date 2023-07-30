@@ -7,9 +7,10 @@
     <div class="col-md-12">
       <!-- Add data attributes to store assess_id and course_instance_id for each quiz -->
       <button
-        class="rounded-pill quiz"
+        class="rounded-pill quiz <%= quiz.is_live ? 'live-quiz' : '' %>"
         data-assess-id="<%= quiz.id %>"
         data-course-instance-id="<%= quiz.course_instance_id %>"
+        <% if (quiz.is_live) { %>disabled<% } %>
       >
         <%= quiz.title %>
       </button>
@@ -23,6 +24,7 @@
   function setQuizToLive(button) {
     const assessId = button.dataset.assessId;
     const courseInstanceId = button.dataset.courseInstanceId;
+    const isLive = button.classList.contains('live-quiz');
 
     console.log('Assessment ID: ' + assessId, 'Course instance id: ' + courseInstanceId);
 
@@ -37,9 +39,28 @@
       },
       data: JSON.stringify({ assessment_id: assessId, course_instance_id: courseInstanceId }),
       success: function () {
-        // Update the button appearance to indicate the status change
-        button.style.backgroundColor = 'red'; // Change the background color to red
-        button.classList.add('live-quiz'); // Add a class to indicate it's a live quiz
+        // Toggle the button appearance to indicate the status change
+        if (button.classList.contains('live-quiz')) {
+          button.style.backgroundColor = ''; // Reset the background color
+          button.classList.remove('live-quiz'); // Remove the class
+          button.disabled = false; // Re-enable the button
+
+          // Re-enable all other buttons
+          quizButtons.forEach((b) => {
+            if (b !== button) { // Skip the button we just clicked
+              b.disabled = false;
+            }
+          });
+        } else {
+          button.style.backgroundColor = 'red'; // Change the background color to red
+          button.classList.add('live-quiz'); // Add a class to indicate it's a live quiz
+          // Disable all other buttons
+          quizButtons.forEach((b) => {
+            if (b !== button) { // Skip the button we just clicked
+              b.disabled = true;
+            }
+          });
+        }
       },
       error: function (xhr, status, error) {
         // Handle error cases
