@@ -1,7 +1,6 @@
 -- Create a trigger function to handle the logic when is_live changes to false
-CREATE OR REPLACE FUNCTION check_last_three_rank1s()
-RETURNS TRIGGER AS
-$$
+CREATE
+OR REPLACE FUNCTION check_hat_trick () RETURNS TRIGGER AS $$
 DECLARE
     user_id_to_insert BIGINT;
 BEGIN
@@ -10,8 +9,8 @@ BEGIN
         -- Find the last three rank 1 records for the same course_instance_id
         SELECT user_id
         FROM PLR_live_session_credentials
-        WHERE rank = 1 AND assessment_instance_id = NEW.assess_id
-        AND session_id IN (
+        WHERE rank = 1 AND session_id 
+        IN (
             SELECT id FROM PLR_live_session
             WHERE course_instance_id = NEW.course_instance_id
             ORDER BY created_at DESC
@@ -35,11 +34,10 @@ BEGIN
 
     RETURN NEW;
 END;
-$$
-LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 -- Create the trigger on PLR_live_session to invoke the trigger function
 CREATE TRIGGER check_hat_trick_trigger
-AFTER UPDATE ON PLR_live_session
-FOR EACH ROW
-EXECUTE FUNCTION check_hat_trick();
+AFTER
+UPDATE ON PLR_live_session FOR EACH ROW
+EXECUTE FUNCTION check_hat_trick ();
