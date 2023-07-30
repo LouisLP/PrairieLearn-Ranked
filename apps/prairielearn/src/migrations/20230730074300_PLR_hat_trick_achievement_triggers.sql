@@ -24,11 +24,11 @@ BEGIN
         IF user_id_to_insert IS NOT NULL AND NOT EXISTS (
             SELECT 1
             FROM PLR_has_achieved
-            WHERE user_id = user_id_to_insert AND achievement_id = 7
+            WHERE user_id = user_id_to_insert AND achievement_id = 9
         ) THEN
             -- Insert into the has_achieved table
             INSERT INTO PLR_has_achieved (user_id, achievement_id, amount)
-            VALUES (user_id_to_insert, 7, 1);
+            VALUES (user_id_to_insert, 9, 1);
         END IF;
     END IF;
 

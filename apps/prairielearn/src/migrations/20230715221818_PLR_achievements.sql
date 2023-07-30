@@ -47,9 +47,19 @@ VALUES
     'Worst score in the semester (only 1 of these is cycled out per semester)'
   ),
   (
-    'Gold/Silver/Bronze',
+    'Bronze',
     'workspace_premium',
-    'Top 3 scores (colored differently) in a live quiz'
+    'Get rank 3 (colored differently) in a live quiz'
+  ),
+  (
+    'Silver',
+    'workspace_premium',
+    'Get rank 2 (colored differently) in a live quiz'
+  ),
+  (
+    'Gold',
+    'workspace_premium',
+    'Get rank 1 (colored differently) in a live quiz'
   ),
   (
     'The Thinker',
