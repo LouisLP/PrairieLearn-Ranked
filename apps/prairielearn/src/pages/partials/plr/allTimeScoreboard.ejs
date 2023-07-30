@@ -15,13 +15,13 @@
         </tr>
       </thead>
       <tbody>
-        <% if (locals.allTimeReults) { %>
-          <% for(let i = 0; i < locals.allTimeReults.length; i++) { %>
+        <% if (locals.allTimeResults) { %>
+          <% for(let i = 0; i < locals.allTimeResults.length; i++) { %>
             <tr>
               <th scope="row"><%= i + 1 %></th>
-              <td><%= locals.allTimeReults[i].display_name %></td>
+              <td><%= locals.allTimeResults[i].display_name %></td>
               <td>Add Badges...</td>
-              <td><%= locals.allTimeReults[i].points %></td>
+              <td><%= locals.allTimeResults[i].points %></td>
             </tr>
           <% } %>
         <% } else { %>

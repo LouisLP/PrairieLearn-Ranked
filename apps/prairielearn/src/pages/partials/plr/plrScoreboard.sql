@@ -19,8 +19,9 @@ SELECT
 FROM
    PLR_seasonal_session_CREDENTIALS
    JOIN PLR_students USING (user_id)
+   JOIN PLR_seasonal_session on session_id = PLR_seasonal_session.id
 WHERE
-   course_instance_id = $1
+   course_id = $1
 ORDER BY
    points DESC;
 -- ENDBLOCK

@@ -30,9 +30,20 @@ function getSeasonalResults(course_instance_id) {
     });
   });
 }
-// TODO: Function to get ALL-TIME RESULTS
-
+// Function to get ALL-TIME RESULTS
+function getAllTimeResults(course_id) {
+  return new Promise((resolve, reject) => {
+    sqldb.query(sql.get_alltime_results, [course_id], function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.rows);
+      }
+    });
+  });
+}
 module.exports = { 
   getLiveResults,
-  getSeasonalResults
+  getSeasonalResults,
+  getAllTimeResults
 };
