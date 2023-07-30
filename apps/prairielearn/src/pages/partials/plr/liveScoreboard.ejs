@@ -65,9 +65,7 @@
   function updateScores(scores) {
     const tableBody = document.querySelector('#live-results');
     tableBody.innerHTML = '';
-    console.log(scores.length);
     scores = getCourseRelevant(scores);
-    console.log(scores.length);
     if (scores.length === 0) {
       const row = document.createElement('tr');
       const cell = document.createElement('td');
@@ -118,7 +116,6 @@
 
   function getCourseRelevant(results){
     const realID = '<%= course_instance.id %>';
-    console.log(realID);
     return results.filter((results) => results.course_instance_id != realID);
   }
 </script>

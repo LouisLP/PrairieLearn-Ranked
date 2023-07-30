@@ -13,9 +13,9 @@ var router = express.Router();
 // SSE Stuff
 var sseClients = require('../../sseClients');
 // Models
-const { getLiveResults } = require('../partials/plr/plrScoreboardModel')
-const { getSeasonalResults } = require('../partials/plr/plrScoreboardModel')
-const { getAllTimeResults } = require('../partials/plr/plrScoreboardModel')
+const { getLiveResults } = require('../partials/plr/plrScoreboardModel');
+const { getSeasonalResults } = require('../partials/plr/plrScoreboardModel');
+const { getAllTimeResults } = require('../partials/plr/plrScoreboardModel');
 // -------
 // ROUTING
 // -------
@@ -41,7 +41,6 @@ router.get('/', async function (req, res, next) {
     res.locals.seasonalResults = await getSeasonalResults(course_instance_id);
     res.locals.allTimeResults = await getAllTimeResults(course_id);
     res.locals.liveResults = await getLiveResults();
-    console.log("Course Id:" + res.locals.course.id);
 
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
   } catch (err) {

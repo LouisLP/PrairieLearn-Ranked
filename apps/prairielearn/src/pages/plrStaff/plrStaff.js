@@ -9,6 +9,7 @@ var sseClients = require('../../sseClients');
 // Models
 const { getLiveResults } = require('../partials/plr/plrScoreboardModel');
 const { getSeasonalResults } = require('../partials/plr/plrScoreboardModel');
+const { getAllTimeResults } = require('../partials/plr/plrScoreboardModel');
 // -------
 // ROUTING
 // -------
@@ -31,7 +32,9 @@ router.get('/', async function (req, res, next) {
   try {
     // Async Scoreboard Population
     var course_instance_id = res.locals.course_instance.id;
+    var course_id = res.locals.course.id;
     res.locals.seasonalResults = await getSeasonalResults(course_instance_id);
+    res.locals.allTimeResults = await getAllTimeResults(course_id);
     res.locals.liveResults = await getLiveResults();
 
     // Non-Async Population
