@@ -1,0 +1,15 @@
+{
+  "description": "Starts a PLR live session",
+  "params": [
+    {
+      "name": "assess_id",
+      "description": "Choose the assessment to attach to the live session",
+      "default": "42"
+    },
+    {
+      "name": "course_instance_id",
+      "description": "Choose the course you want to attach to the live session",
+      "default": "2"
+    }
+  ]
+}

@@ -7,9 +7,12 @@ DECLARE
 BEGIN
     -- Insert or update data in PLR_seasonal_session table
     IF NEW.is_live = FALSE THEN
-        INSERT INTO PLR_seasonal_session (course_instance_id)
-        VALUES (NEW.course_instance_id)
+        INSERT INTO PLR_seasonal_session (course_instance_id, course_id)
+        SELECT NEW.course_instance_id, course_id
+        FROM course_instances
+        WHERE course_instances.id = NEW.course_instance_id
         ON CONFLICT (course_instance_id) DO NOTHING;
+
 
         -- Loop over live session credentials and insert or update data in PLR_seasonal_session_credentials table
         FOR cred IN SELECT * FROM PLR_live_session_credentials WHERE session_id = NEW.id

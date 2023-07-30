@@ -1,25 +1,33 @@
+-- This trigger updates the score, duration, and rank for students in the live session.
 CREATE OR REPLACE FUNCTION update_score_and_rank()
 RETURNS TRIGGER AS $$
 BEGIN
+  -- First thing we do is check if the student has already started an assessment instance in the live session.
   IF NEW.id IN (
     SELECT assessment_instance_id
     FROM PLR_live_session_credentials
   ) THEN
-    UPDATE PLR_live_session_credentials 
-    SET points = NEW.points, duration = NEW.duration
+    --If they have, we update their score and duration.
+    UPDATE PLR_live_session_credentials
+    SET
+      points = NEW.points * 3628,
+      duration = NOW() - PLR_live_session_credentials.assessment_start_time
     WHERE
       PLR_live_session_credentials.assessment_instance_id = NEW.id;
 
+
+  -- Then we check if the assessment of our new row has a live session attached.
   ELSIF NEW.assessment_id IN (
     SELECT assess_id
     FROM PLR_live_session
     WHERE is_live = TRUE
   ) THEN
-    INSERT INTO PLR_live_session_credentials (points, session_id, duration, user_id, assessment_instance_id)
+    -- If it does, we insert a new row into the live session credentials table.
+    INSERT INTO PLR_live_session_credentials (points, session_id, assessment_start_time, user_id, assessment_instance_id)
     SELECT
-      NEW.points,
+      NEW.points * 3628,
       PLR_live_session.id,
-      NEW.duration,
+      NOW(),
       NEW.user_id,
       NEW.id
     FROM
@@ -29,6 +37,7 @@ BEGIN
       assessments.id = NEW.assessment_id;
   END IF;
 
+  -- This query updates the rank of each student in the live session.
   WITH RankedTable AS (
     SELECT
       id,
@@ -38,6 +47,7 @@ BEGIN
     FROM
       PLR_live_session_credentials
   )
+  -- This sets the rank of each student in the live session to the rank in the RankedTable.
   UPDATE PLR_live_session_credentials AS target
   SET rank = subquery.new_rank
   FROM RankedTable AS subquery

@@ -65,9 +65,7 @@
   function updateScores(scores) {
     const tableBody = document.querySelector('#live-results');
     tableBody.innerHTML = '';
-    console.log(scores.length);
     scores = getCourseRelevant(scores);
-    console.log(scores.length);
     if (scores.length === 0) {
       const row = document.createElement('tr');
       const cell = document.createElement('td');
@@ -89,15 +87,11 @@
       achievementCell.textContent = '';
       scoreCell.textContent = score.points;
       var time = score.duration;
-      var dateFormatTime = new Date(
-        time.minutes * 60 * 1000 + time.seconds * 1000 + time.milliseconds,
-      );
-      timeCell.textContent =
-        dateFormatTime.getHours() +
-        ':' +
-        dateFormatTime.getMinutes() +
-        ':' +
-        dateFormatTime.getSeconds();
+      if (time.seconds == undefined){
+        timeCell.textContent = "0:00";
+      } else {
+        timeCell.textContent = time.minutes + ':' + time.seconds;
+      }
       row.appendChild(rankCell);
       row.appendChild(nameCell);
       row.appendChild(achievementCell);
@@ -118,7 +112,6 @@
 
   function getCourseRelevant(results){
     const realID = '<%= course_instance.id %>';
-    console.log(realID);
     return results.filter((results) => results.course_instance_id != realID);
   }
 </script>

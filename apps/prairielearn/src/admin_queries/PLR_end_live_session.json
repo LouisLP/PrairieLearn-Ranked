@@ -1,0 +1,11 @@
+{
+   "description": "End active (TRUE) live sessions, which should populate the seasonal scoreboard",
+   "params": [
+    {
+      "name": "id",
+      "description": "Choose a live scoreboard to deactivate",
+      "default": "1"
+    }
+   ]
+ }
+ 

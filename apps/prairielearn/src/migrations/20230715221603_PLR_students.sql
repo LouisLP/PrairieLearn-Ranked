@@ -1,4 +1,5 @@
--- STUDENTS (connected to "users" with additional information for ranked profiles and live scores)
+-- This table represents our students.
+-- Total score represents all the points a student has ever gotten.
 CREATE TABLE IF NOT EXISTS PLR_students (
     user_id BIGINT PRIMARY KEY,
     display_name VARCHAR(256) NOT NULL,
