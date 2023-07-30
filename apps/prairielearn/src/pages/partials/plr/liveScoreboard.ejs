@@ -87,15 +87,11 @@
       achievementCell.textContent = '';
       scoreCell.textContent = score.points;
       var time = score.duration;
-      var dateFormatTime = new Date(
-        time.minutes * 60 * 1000 + time.seconds * 1000 + time.milliseconds,
-      );
-      timeCell.textContent =
-        dateFormatTime.getHours() +
-        ':' +
-        dateFormatTime.getMinutes() +
-        ':' +
-        dateFormatTime.getSeconds();
+      if (time.seconds == undefined){
+        timeCell.textContent = "0:00";
+      } else {
+        timeCell.textContent = time.minutes + ':' + time.seconds;
+      }
       row.appendChild(rankCell);
       row.appendChild(nameCell);
       row.appendChild(achievementCell);

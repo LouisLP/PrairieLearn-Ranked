@@ -8,10 +8,13 @@ BEGIN
     FROM PLR_live_session_credentials
   ) THEN
     --If they have, we update their score and duration.
-    UPDATE PLR_live_session_credentials 
-    SET points = NEW.points * 3628, duration = NEW.duration
+    UPDATE PLR_live_session_credentials
+    SET
+      points = NEW.points * 3628,
+      duration = NOW() - PLR_live_session_credentials.assessment_start_time
     WHERE
       PLR_live_session_credentials.assessment_instance_id = NEW.id;
+
 
   -- Then we check if the assessment of our new row has a live session attached.
   ELSIF NEW.assessment_id IN (
@@ -20,11 +23,11 @@ BEGIN
     WHERE is_live = TRUE
   ) THEN
     -- If it does, we insert a new row into the live session credentials table.
-    INSERT INTO PLR_live_session_credentials (points, session_id, duration, user_id, assessment_instance_id)
+    INSERT INTO PLR_live_session_credentials (points, session_id, assessment_start_time, user_id, assessment_instance_id)
     SELECT
       NEW.points * 3628,
       PLR_live_session.id,
-      NEW.duration,
+      NOW(),
       NEW.user_id,
       NEW.id
     FROM
