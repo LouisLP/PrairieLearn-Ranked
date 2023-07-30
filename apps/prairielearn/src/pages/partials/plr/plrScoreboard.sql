@@ -36,6 +36,9 @@ SELECT
 FROM
    PLR_live_session_CREDENTIALS
    JOIN PLR_students USING (user_id)
+   JOIN PLR_live_session on session_id = PLR_live_session.id
+WHERE
+   is_live = TRUE
 ORDER BY
    points DESC;
 -- ENDBLOCK
