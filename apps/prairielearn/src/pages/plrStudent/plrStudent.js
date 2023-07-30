@@ -36,15 +36,30 @@ router.get('/', async function (req, res, next) {
     res.locals.allTimeResults = await getAllTimeResults(course_id);
     res.locals.liveResults = await getLiveResults();
 
+    // Get the user's display name
+    res.locals.displayName = await getUserDisplayName(res.locals.authn_user.user_id);
+
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
   } catch (err) {
     console.log(err);
   }
 });
+
 // ---------
 // FUNCTIONS
 // ---------
-// TODO: Function to get USER INFO
+// Function to get USER DISPLAY NAME
+function getUserDisplayName(user_id) {
+  return new Promise((resolve, reject) => {
+    sqldb.queryOneRow(sql.get_user_display_name, [user_id], function(err, result) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.rows[0].display_name);
+      }
+    });
+  });
+}
 
 // TODO: Function to get ACHIEVEMENTS
 
