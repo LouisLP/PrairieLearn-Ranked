@@ -1,34 +1,30 @@
 <div class="card container p-3" id="profile-card">
-   <!-- Row 1: Include profile icon, name, and rank in the semester -->
-   <div class="row">
-     <h5>
-       <span class="material-symbols-outlined align-bottom px-2"> person </span>
-       {Display Name}
-     </h5>
-   </div>
-   <!-- Row 2: Display Name -->
-   <div class="row">
-     <form method="post" action="" class="form mb-4">
-       <input type="text" />
-       <!-- Submission of form -->
-       <button type="submit" class="btn btn-outline-light btn-sm px-2">
-         Change Display Name
-       </button>
-     </form>
-   </div>
-   <!-- Row 2: Displayed Badges -->
-   <div class="row py-2" id="badge-display">
-     <div class="col my-auto">
-       <h5>Displayed Badges</h5>
-       <span class="material-symbols-outlined align-bottom px-2"> elderly </span>
-       <span class="material-symbols-outlined align-bottom px-2"> rocket_launch </span>
-       <span class="material-symbols-outlined align-bottom px-2"> school </span>
-     </div>
-   </div>
-   <!-- Row 3: Achievements -->
-   <div class="row py-2 mt-3" id="badge-display">
-     <div class="col my-auto">
-       <%- include('achievementList.ejs'); %>
-     </div>
-   </div>
- </div>
+  <!-- Row 1: Include profile icon, name, and rank in the semester -->
+  <div class="row">
+    <h5>
+      <span class="material-symbols-outlined align-bottom px-2"> person </span>
+      <%= displayName %>
+    </h5>
+  </div>
+  <!-- Row 2: Display Name -->
+  <div class="row">
+    <form method="post" action="" class="form mb-4">
+      <input type="text" />
+      <!-- Submission of form -->
+      <button type="submit" class="btn btn-outline-light btn-sm px-2">Change Display Name</button>
+    </form>
+  </div>
+  <!-- Row 2: Displayed Badges -->
+  <div class="row py-2" id="badge-display">
+    <div class="col my-auto">
+      <h5>Displayed Badges</h5>
+      <span class="material-symbols-outlined align-bottom px-2"> elderly </span>
+      <span class="material-symbols-outlined align-bottom px-2"> rocket_launch </span>
+      <span class="material-symbols-outlined align-bottom px-2"> school </span>
+    </div>
+  </div>
+  <!-- Row 3: Achievements -->
+  <div class="row py-2 mt-3" id="badge-display">
+    <div class="col my-auto"><%- include('achievementList.ejs'); %></div>
+  </div>
+</div>
