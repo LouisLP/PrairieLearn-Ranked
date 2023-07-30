@@ -1,3 +1,8 @@
--- TODO: Query to get user information (for profile)
-
--- TODO: Query to get achievement information (has_achieved)
+-- BLOCK get_user_display_name
+SELECT
+   PLR_students.display_name
+FROM
+   PLR_students
+WHERE
+   PLR_students.user_id = $1;
+-- ENDBLOCK
