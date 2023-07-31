@@ -30,18 +30,34 @@ router.get('/live_updates', (req, res) => {
 
 router.get('/', async function (req, res, next) {
   try {
-    var course_instance_id = res.locals.course_instance.id;
+    res.locals.course_instance_id = res.locals.course_instance.id;
     var course_id = res.locals.course.id;
-    res.locals.seasonalResults = await getSeasonalResults(course_instance_id);
+    var user_id = res.locals.authn_user.user_id;
+    res.locals.seasonalResults = await getSeasonalResults(res.locals.course_instance_id);
     res.locals.allTimeResults = await getAllTimeResults(course_id);
     res.locals.liveResults = await getLiveResults();
 
     // Get the user's display name
-    res.locals.displayName = await getUserDisplayName(res.locals.authn_user.user_id);
+    res.locals.displayName = await getUserDisplayName(user_id);
+    res.locals.userId = user_id; // Also pass the user_id to res.locals
 
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
   } catch (err) {
     console.log(err);
+  }
+});
+
+// Route to handle the update_display_name endpoint (POST request)
+router.post('/update_display_name', async (req, res) => {
+  try {
+    const { user_id, new_display_name } = req.body;
+
+    // Call the updateDisplayName function to update the display name for the user
+    await updateDisplayName(user_id, new_display_name);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error('Error updating display name:', err);
+    res.sendStatus(500);
   }
 });
 
@@ -56,6 +72,18 @@ function getUserDisplayName(user_id) {
         reject(err);
       } else {
         resolve(result.rows[0].display_name);
+      }
+    });
+  });
+}
+// Function to change/update USER DISPLAY NAME
+function updateDisplayName(userId, newDisplayName) {
+  return new Promise((resolve, reject) => {
+    sqldb.query(sql.update_display_name, [userId, newDisplayName], function(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
       }
     });
   });
