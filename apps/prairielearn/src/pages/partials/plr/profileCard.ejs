@@ -3,12 +3,18 @@
   <div class="row">
     <h5>
       <span class="material-symbols-outlined align-bottom px-2">person</span>
-      <%= displayName %>
+      <span id="display-name"><%= displayName %></span>
     </h5>
   </div>
   <!-- Row 2: Change Display Name -->
   <div class="row">
-    <form method="post" action="" class="form mb-4" data-user-id="<%= userId %>">
+    <form
+      method="post"
+      action=""
+      class="form mb-4"
+      id="display-name-form"
+      data-user-id="<%= userId %>"
+    >
       <input type="text" id="display-name-input" />
       <!-- Submission of form -->
       <button
@@ -33,33 +39,46 @@
   <div class="row py-2 mt-3" id="badge-display">
     <div class="col my-auto"><%- include('achievementList.ejs'); %></div>
   </div>
+
+  <script>
+    const userId = '<%= userId %>';
+    const urlPrefix = '<%= urlPrefix %>';
+
+    // Function to update the display name
+    function updateDisplayName(event) {
+      event.preventDefault(); // prevent form from submitting normally
+      const newDisplayName = document.querySelector('#display-name-input').value;
+
+      // Create FormData to append CSRF token
+      let formData = new FormData();
+      let csrfToken = '<%= __csrf_token %>';
+      console.log('CSRF Token:', csrfToken);
+      formData.append('__csrf_token', csrfToken);
+
+      fetch(urlPrefix + '/plrStudent/' + userId + '/' + encodeURIComponent(newDisplayName), {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json(); // This returns a promise
+        })
+        .then((jsonResponse) => {
+          // Update the display name in the page
+          document.querySelector('#display-name').textContent = newDisplayName;
+        })
+        .catch((error) => {
+          console.error('Error updating display name:', error);
+          console.error('Error name:', error.name);
+          console.error('Error stack:', error.stack);
+        });
+    }
+
+    // Add a click event listener to the "Change Display Name" button
+    document
+      .querySelector('#change-display-name-button')
+      .addEventListener('click', updateDisplayName);
+  </script>
 </div>
-
-<script>
-  // Function to update the display name
-  function updateDisplayName() {
-    const userId = this.parentNode.dataset.userId; // Fetch the user_id from data attribute
-    const newDisplayName = document.querySelector('#display-name-input').value;
-
-    $.ajax({
-      url: '/pl/course_instance/' + '<%= course_instance_id %>' + '/plrStudent/update_display_name',
-      method: 'POST',
-      contentType: 'application/json',
-      headers: {
-        'X-CSRF-Token': '<%= __csrf_token %>',
-      },
-      data: JSON.stringify({ user_id: userId, new_display_name: newDisplayName }),
-      success: function () {
-        // Update the display name in the page
-        document.querySelector('#display-name').textContent = newDisplayName;
-      },
-      error: function (xhr, status, error) {
-        console.error('Error updating display name:', status, error);
-      },
-    });
-  }
-  // Add a click event listener to the "Change Display Name" button
-  document
-    .querySelector('#change-display-name-button')
-    .addEventListener('click', updateDisplayName);
-</script>

@@ -48,12 +48,11 @@ router.get('/', async function (req, res, next) {
 });
 
 // Route to handle the update_display_name endpoint (POST request)
-router.post('/update_display_name', async (req, res) => {
-  try {
-    const { user_id, new_display_name } = req.body;
+router.post('/:userId/update_display_name/:new_display_name', async (req, res) => {
+  const { userId, new_display_name } = req.params;
 
-    // Call the updateDisplayName function to update the display name for the user
-    await updateDisplayName(user_id, new_display_name);
+  try {
+    await updateDisplayName(userId, decodeURIComponent(new_display_name));
     res.sendStatus(200);
   } catch (err) {
     console.error('Error updating display name:', err);
@@ -67,7 +66,7 @@ router.post('/update_display_name', async (req, res) => {
 // Function to get USER DISPLAY NAME
 function getUserDisplayName(user_id) {
   return new Promise((resolve, reject) => {
-    sqldb.queryOneRow(sql.get_user_display_name, [user_id], function(err, result) {
+    sqldb.queryOneRow(sql.get_user_display_name, [user_id], function (err, result) {
       if (err) {
         reject(err);
       } else {
@@ -79,7 +78,7 @@ function getUserDisplayName(user_id) {
 // Function to change/update USER DISPLAY NAME
 function updateDisplayName(userId, newDisplayName) {
   return new Promise((resolve, reject) => {
-    sqldb.query(sql.update_display_name, [userId, newDisplayName], function(err) {
+    sqldb.query(sql.update_display_name, [userId, newDisplayName], function (err) {
       if (err) {
         reject(err);
       } else {
@@ -90,6 +89,5 @@ function updateDisplayName(userId, newDisplayName) {
 }
 
 // TODO: Function to get ACHIEVEMENTS
-
 
 module.exports = router;
