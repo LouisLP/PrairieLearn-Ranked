@@ -1,23 +1,29 @@
 <div class="card container p-3" id="profile-card">
-  <!-- Row 1: Include profile icon, name, and rank in the semester -->
+  <!-- Row 1: Display Name -->
   <div class="row">
     <h5>
-      <span class="material-symbols-outlined align-bottom px-2"> person </span>
+      <span class="material-symbols-outlined align-bottom px-2">person</span>
       <%= displayName %>
     </h5>
   </div>
-  <!-- Row 2: Display Name -->
+  <!-- Row 2: Change Display Name -->
   <div class="row">
-    <form method="post" action="" class="form mb-4">
-      <input type="text" />
+    <form method="post" action="" class="form mb-4" data-user-id="<%= userId %>">
+      <input type="text" id="display-name-input" />
       <!-- Submission of form -->
-      <button type="submit" class="btn btn-outline-light btn-sm px-2">Change Display Name</button>
+      <button
+        type="submit"
+        class="btn btn-outline-light btn-sm px-2"
+        id="change-display-name-button"
+      >
+        Change Display Name
+      </button>
     </form>
   </div>
-  <!-- Row 2: Displayed Badges -->
+  <!-- Row 2: Achieved Badges -->
   <div class="row py-2" id="badge-display">
     <div class="col my-auto">
-      <h5>Displayed Badges</h5>
+      <h5>Achieved Achievements</h5>
       <span class="material-symbols-outlined align-bottom px-2"> elderly </span>
       <span class="material-symbols-outlined align-bottom px-2"> rocket_launch </span>
       <span class="material-symbols-outlined align-bottom px-2"> school </span>
@@ -28,3 +34,32 @@
     <div class="col my-auto"><%- include('achievementList.ejs'); %></div>
   </div>
 </div>
+
+<script>
+  // Function to update the display name
+  function updateDisplayName() {
+    const userId = this.parentNode.dataset.userId; // Fetch the user_id from data attribute
+    const newDisplayName = document.querySelector('#display-name-input').value;
+
+    $.ajax({
+      url: '/pl/course_instance/' + '<%= course_instance_id %>' + '/plrStudent/update_display_name',
+      method: 'POST',
+      contentType: 'application/json',
+      headers: {
+        'X-CSRF-Token': '<%= __csrf_token %>',
+      },
+      data: JSON.stringify({ user_id: userId, new_display_name: newDisplayName }),
+      success: function () {
+        // Update the display name in the page
+        document.querySelector('#display-name').textContent = newDisplayName;
+      },
+      error: function (xhr, status, error) {
+        console.error('Error updating display name:', status, error);
+      },
+    });
+  }
+  // Add a click event listener to the "Change Display Name" button
+  document
+    .querySelector('#change-display-name-button')
+    .addEventListener('click', updateDisplayName);
+</script>
