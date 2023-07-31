@@ -93,7 +93,8 @@
         <!-- End first column... -->
         <!-- Second column: Profile Card -->
         <div class="maincardcontainer col-md-5 mt-3">
-          <%- include('../partials/plr/profileCard.ejs'); %>
+          <%- include('../partials/plr/profileCard.ejs', { userId: userId, displayName: displayName,
+          course_instance_id: course_instance_id }); %>
         </div>
       </div>
     </main>
