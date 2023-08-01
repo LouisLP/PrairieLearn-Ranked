@@ -16,7 +16,6 @@ BEGIN
     WHERE
       PLR_live_session_credentials.assessment_instance_id = NEW.id;
 
-
   -- Then we check if the assessment of our new row has a live session attached.
   ELSIF NEW.assessment_id IN (
     SELECT assess_id
@@ -33,9 +32,9 @@ BEGIN
       NEW.id
     FROM
       PLR_live_session
-      INNER JOIN assessments ON PLR_live_session.course_instance_id = assessments.course_instance_id
+      JOIN assessments ON PLR_live_session.course_instance_id = assessments.course_instance_id
     WHERE
-      assessments.id = NEW.assessment_id;
+      assessments.id = NEW.assessment_id AND is_live = TRUE;
   END IF;
 
   -- This query updates the rank of each student in the live session.
