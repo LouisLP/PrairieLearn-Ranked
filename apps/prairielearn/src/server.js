@@ -650,9 +650,9 @@ module.exports.initExpress = function () {
 
   // Parse the payload and convert it to an object
   pgClient.on('notification', async (message) => {
-    // Parse the payload and convert it to an object
-    console.log('Notification');
-    // const data = JSON.parse(message.payload);
+
+    // This console log should probably remain as it's very useful to know if our notify is working correctly.
+    console.log('Postgres Notification Received: ');
     // Get the live results
     try {
       const liveResults = await getLiveResults();
