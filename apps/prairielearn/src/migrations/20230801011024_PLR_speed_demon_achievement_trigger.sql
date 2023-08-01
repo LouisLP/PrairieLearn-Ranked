@@ -6,7 +6,7 @@ DECLARE
 BEGIN
   -- 1. Find the plr_live_session_credential row with the shortest duration and matching session_id
   SELECT INTO shortest_duration_record *
-  FROM plr_live_session_credential
+  FROM plr_live_session_credentials
   WHERE session_id = NEW.id
   ORDER BY duration ASC
   LIMIT 1;
@@ -20,8 +20,8 @@ BEGIN
     ORDER BY created_at DESC
     LIMIT 4
   ) as previous_sessions
-  JOIN plr_live_session_credential ON previous_sessions.id = plr_live_session_credential.session_id
-  WHERE plr_live_session_credential.user_id = shortest_duration_record.user_id;
+  JOIN plr_live_session_credentials ON previous_sessions.id = plr_live_session_credentials.session_id
+  WHERE plr_live_session_credentials.user_id = shortest_duration_record.user_id;
 
   -- 3. If the same user_id had the shortest duration, insert a row into the plr_has_achieved table
   IF same_user_count = 4 THEN

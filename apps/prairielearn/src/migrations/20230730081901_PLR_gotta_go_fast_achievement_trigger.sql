@@ -1,4 +1,3 @@
--- Create a trigger function to handle the updates
 CREATE
 OR REPLACE FUNCTION gotta_go_fast () RETURNS TRIGGER AS $$
 BEGIN
@@ -12,10 +11,16 @@ BEGIN
       ORDER BY duration ASC
       LIMIT 1
     )
-    -- Insert the user_id into plr_has_achieved and set achievement to 1
+    -- If the user_id and achievement_id pair does not already exist in the plr_has_achieved table,
+    -- insert the user_id into plr_has_achieved and set achievement to 1
     INSERT INTO plr_has_achieved (user_id, achievement_id, amount)
     SELECT user_id, 5, 1
-    FROM shortest_duration;
+    FROM shortest_duration
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM plr_has_achieved
+      WHERE user_id = (SELECT user_id FROM shortest_duration) AND achievement_id = 5
+    );
   END IF;
   RETURN NEW;
 END;

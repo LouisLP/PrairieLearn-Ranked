@@ -1,11 +1,12 @@
 -- This trigger updates the score, duration, and rank for students in the live session.
-CREATE OR REPLACE FUNCTION update_score_and_rank()
-RETURNS TRIGGER AS $$
+CREATE
+OR REPLACE FUNCTION update_score_and_rank () RETURNS TRIGGER AS $$
 BEGIN
   -- First thing we do is check if the student has already started an assessment instance in the live session.
   IF NEW.id IN (
     SELECT assessment_instance_id
     FROM PLR_live_session_credentials
+    WHERE PLR_live_session_credentials.user_id = NEW.user_id
   ) THEN
     --If they have, we update their score and duration.
     UPDATE PLR_live_session_credentials
@@ -59,6 +60,7 @@ $$ LANGUAGE plpgsql;
 
 -- This trigger listens for updates or inserts on assessment instances
 CREATE TRIGGER trigger_update_assessment_instances
-AFTER UPDATE OR INSERT ON assessment_instances
-FOR EACH ROW
-EXECUTE FUNCTION update_score_and_rank();
+AFTER
+UPDATE
+OR INSERT ON assessment_instances FOR EACH ROW
+EXECUTE FUNCTION update_score_and_rank ();

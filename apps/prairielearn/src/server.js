@@ -629,10 +629,9 @@ module.exports.initExpress = function () {
     require('./middlewares/ansifySyncErrorsAndWarnings.js'),
   ]);
 
-
-  // --------------------------- 
+  // ---------------------------
   // PRAIRIELEARN RANKED CLIENTS
-  // --------------------------- 
+  // ---------------------------
   const pg = require('pg');
   const sseClients = require('./sseClients');
 
@@ -649,10 +648,11 @@ module.exports.initExpress = function () {
 
   pgClient.connect();
 
-    // Parse the payload and convert it to an object
+  // Parse the payload and convert it to an object
   pgClient.on('notification', async (message) => {
     // Parse the payload and convert it to an object
-    const data = JSON.parse(message.payload);
+    console.log('Notification');
+    // const data = JSON.parse(message.payload);
     // Get the live results
     try {
       const liveResults = await getLiveResults();
@@ -661,7 +661,7 @@ module.exports.initExpress = function () {
       console.log(err);
     }
   });
-    
+
   pgClient.query('LISTEN table_change_notification');
 
   // Add a new route handler for connection closed event
@@ -691,7 +691,6 @@ module.exports.initExpress = function () {
   // ------------------------------------
   // END PRAIRIELEARN RANKED STUDENT PAGE
   // ------------------------------------
-
 
   // Some course instance student pages only require course instance authorization (already checked)
   app.use(
@@ -1255,7 +1254,6 @@ module.exports.initExpress = function () {
     }),
   );
 
-
   // ------------------------------
   // PRAIRIELEARN RANKED STAFF PAGE
   // ------------------------------
@@ -1269,7 +1267,7 @@ module.exports.initExpress = function () {
   // ----------------------------------
   // END PRAIRIELEARN RANKED STAFF PAGE
   // ----------------------------------
-  
+
   app.use('/pl/course_instance/:course_instance_id/instructor/instance_admin/settings', [
     function (req, res, next) {
       res.locals.navSubPage = 'settings';
