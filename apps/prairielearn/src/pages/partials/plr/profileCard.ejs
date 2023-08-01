@@ -1,0 +1,47 @@
+<div class="card container p-3" id="profile-card">
+  <!-- Row 1: Display Name -->
+  <div class="row">
+    <h5>
+      <span class="material-symbols-outlined align-bottom px-2">person</span>
+      <span id="display-name"><%= displayName %></span>
+    </h5>
+  </div>
+  <!-- Row 2: Change Display Name -->
+  <div class="row">
+    <form name="change-display-name-form" class="mb-3" method="POST">
+      <input type="hidden" name="__action" value="change-display-name" />
+      <input type="hidden" name="__csrf_token" value="<%= __csrf_token %>" />
+      <input type="hidden" name="userId" value="<%= userId %>" />
+      <input type="text" name="newDisplayName" />
+      <button
+        type="submit"
+        class="btn btn-outline-light btn-sm px-2"
+        id="change-display-name-button"
+      >
+        Change Name
+      </button>
+    </form>
+  </div>
+  <!-- Row 2: Achieved Badges -->
+  <div class="row py-2" id="badge-display">
+    <div class="col my-auto">
+      <h5>Achieved Achievements</h5>
+      <span class="material-symbols-outlined align-bottom px-2"> elderly </span>
+      <span class="material-symbols-outlined align-bottom px-2"> rocket_launch </span>
+      <span class="material-symbols-outlined align-bottom px-2"> school </span>
+    </div>
+  </div>
+  <!-- Row 3: Achievements -->
+  <div class="row py-2 mt-3" id="badge-display">
+    <div class="col my-auto"><%- include('achievementList.ejs'); %></div>
+  </div>
+</div>
+
+<script>
+  const userId = '<%= userId %>';
+  const urlPrefix = '<%= urlPrefix %>';
+
+  // Grab the value inputted into the text field
+  const changeDisplayNameForm = document.forms['change-display-name-form'];
+  const newDisplayName = changeDisplayNameForm.querySelector('input');
+</script>
