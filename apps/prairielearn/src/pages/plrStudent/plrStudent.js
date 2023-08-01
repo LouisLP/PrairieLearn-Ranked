@@ -43,37 +43,28 @@ router.get('/', async function (req, res, next) {
     res.locals.userId = user_id; // Also pass the user_id to res.locals
 
     // NAV PAGE STUFF (from server.js)
-    res.locals.navPage = 'plrStudent'; 
+    // res.locals.navPage = 'plrStudent'; 
     res.render(__filename.replace(/\.js$/, '.ejs'), res.locals);
   } catch (err) {
     console.log(err);
   }
 });
 
-// Route to handle the update_display_name endpoint (POST request)
-router.post('/pl/course_instance/:course_instance_id/plrStudent/:userId/update_display_name', function (req, res, next) {
-  if (req.body.__action == 'changeDisplayName') {
-    const userId = req.params.userId;
-    const newDisplayName = req.body.new_display_name;
-    console.log('newDisplayName: ', newDisplayName);
-    console.log('userId: ', userId);
-    var params = {
-      user_id: userId,
-      new_display_name: newDisplayName,
-    };
-    sqldb.queryOneRow(sql.update_display_name, params, function (err, result) {
-      if (ERR(err, next)) return;
-      res.redirect(req.originalUrl);
-    });
-  } else {
-    return next(
-      ERR.make(400, 'unknown __action', {
-        body: req.body,
-        locals: res.locals,
-      }),
-    );
-  }
+router.get('/pl/course_instance/:course_instance_id/plrStudent/:userId/update_display_name', function (req, res, next) {
+  const userId = req.params.userId;
+  const newDisplayName = req.query.new_display_name;
+  console.log('newDisplayName: ', newDisplayName);
+  console.log('userId: ', userId);
+  var params = {
+    user_id: userId,
+    new_display_name: newDisplayName,
+  };
+  sqldb.queryOneRow(sql.update_display_name, params, function (err, result) {
+    if (ERR(err, next)) return;
+    res.redirect(req.originalUrl);
+  });
 });
+
 
 
 // ---------

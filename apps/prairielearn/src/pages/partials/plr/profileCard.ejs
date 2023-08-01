@@ -12,11 +12,14 @@
       <input type="hidden" name="__action" value="changeDisplayName" />
       <input type="hidden" name="__csrf_token" value="<%= __csrf_token %>" />
       <input type="text" id="display-name-input" />
-      <button type="submit" class="btn btn-outline-light btn-sm px-2" id="change-display-name-button">
+      <button
+        type="submit"
+        class="btn btn-outline-light btn-sm px-2"
+        id="change-display-name-button"
+      >
         Change Display Name
       </button>
     </form>
-    
   </div>
   <!-- Row 2: Achieved Badges -->
   <div class="row py-2" id="badge-display">
@@ -44,18 +47,19 @@
       // Create FormData to append CSRF token
       let formData = new FormData();
       let csrfToken = '<%= __csrf_token %>';
-      console.log("URL Prefix: " + urlPrefix);
-      console.log("User ID: " + userId);
-      console.log("New Display Name: " + newDisplayName);
-      fetch(urlPrefix + '/plrStudent/' + userId + '/update_display_name', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+      console.log('URL Prefix: ' + urlPrefix);
+      console.log('User ID: ' + userId);
+      console.log('New Display Name: ' + newDisplayName);
+      fetch(
+        urlPrefix +
+          '/plrStudent/' +
+          userId +
+          '/update_display_name?new_display_name=' +
+          encodeURIComponent(newDisplayName),
+        {
+          method: 'GET',
         },
-        body: `new_display_name=${encodeURIComponent(
-          newDisplayName,
-        )}&__csrf_token=${encodeURIComponent(csrfToken)}`,
-      })
+      )
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
