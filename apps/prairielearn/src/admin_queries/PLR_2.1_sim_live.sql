@@ -10,7 +10,6 @@ With
     INSERT INTO
       assessment_instances (user_id, points, assessment_id)
     VALUES
-      (2, 2, $assessment_id),
       (3, 4, $assessment_id),
       (4, 6, $assessment_id),
       (5, 8, $assessment_id),

@@ -26,54 +26,43 @@ INSERT INTO
     achievement_description
   )
 VALUES
-  (
+  ( -- ID 1
     'Gold',
-    'Rank 1 in a live quiz', -- Comma was missing here
-    'workspace_premium'
+    'workspace_premium',
+    'Rank 1 in a live quiz'
   ),
-  (
+  ( -- ID 2
     'Silver',
     'workspace_premium',
     'Rank 2 in a live quiz'
   ),
-  (
+  ( -- ID 3
     'Bronze',
     'workspace_premium',
     'Rank 3 in a live quiz'
   ),
-  (
+  ( -- ID 4
     'Hat Trick',
     'school',
     'Rank 1, 3 live quizzes in a row'
   ),
-  (
+  ( -- ID 5
     'Gotta Go Fast',
     'rocket_launch',
     'Fastest to submit the quiz'
   ),
-  (
+  ( -- ID 6
     'Speed Demon',
-    'no icon',
-    'Fastest time 5 live quizzes in a row'
+    'sprint',
+    'Fastest time, 5 live quizzes in a row'
   ),
-  (
+  ( -- ID 7
     'Always On Time',
     'emoji_people',
     'Attended every quiz'
   ),
-  (
-    'Half-Baked',
-    'cookie',
-    'Exactly half the maximum score (pass)'
-  ),
-  ('Perfect Score', 'no icon', 'Perfect score'),
-  (
-    'Power Streak',
-    'no icon',
-    'Top 3 results, 5 quizzes in a row'
-  ),
-  (
+  ( -- ID 8
     'Unstoppable',
-    'no icon',
-    'Rank 1, 5 or more live quizzes in a row'
+    'person_celebrate',
+    'Rank 1, 5 live quizzes in a row'
   );
