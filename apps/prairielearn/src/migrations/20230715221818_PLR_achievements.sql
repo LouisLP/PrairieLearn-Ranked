@@ -27,29 +27,9 @@ INSERT INTO
   )
 VALUES
   (
-    'Gotta Go Fast',
-    'rocket_launch',
-    'Fastest to submit the quiz'
-  ),
-  (
-    'Slowpoke',
-    'elderly',
-    'Slowest to submit the quiz'
-  ),
-  (
-    'Enlightened',
-    'self_improvement',
-    'Best score in the semester (only 1 of these is cycled out per semester)'
-  ),
-  (
-    'Heartbroken',
-    'heart_broken',
-    'Worst score in the semester (only 1 of these is cycled out per semester)'
-  ),
-  (
-    'Bronze',
+    'Gold',
+    'Get rank 1 (colored differently) in a live quiz'
     'workspace_premium',
-    'Get rank 3 (colored differently) in a live quiz'
   ),
   (
     'Silver',
@@ -57,19 +37,24 @@ VALUES
     'Get rank 2 (colored differently) in a live quiz'
   ),
   (
-    'Gold',
+    'Bronze',
     'workspace_premium',
-    'Get rank 1 (colored differently) in a live quiz'
-  ),
-  (
-    'The Thinker',
-    'psychology',
-    'Highest score with the slowest submission'
+    'Get rank 3 (colored differently) in a live quiz'
   ),
   (
     'Hat Trick',
     'school',
     '3 first place scores in a row'
+  ),
+  (
+    'Gotta Go Fast',
+    'rocket_launch',
+    'Fastest to submit the quiz'
+  ),
+  (
+    'Speed Demon',
+    'no icon',
+    'Fastest time 5 live quizes in a row'
   ),
   (
     'Always On Time',
@@ -82,7 +67,18 @@ VALUES
     'Exactly half the maximum score (pass)'
   ),
   (
-    'Best of the Best',
-    'hotel_class',
-    'Given at the end of the semester to the top scorer'
-  );
+    'Perfect Score',
+    'no icon',
+    'Perfect score'
+  ),
+  (
+    'Power Streak',
+    'no icon',
+    'Top 3 results, 5 quizzes in a row'
+  ),
+  (
+    'Unstoppable',
+    'no icon',
+    'Rank 1, 5 or more live quizzes in a row'
+  )
+;

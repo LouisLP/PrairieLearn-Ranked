@@ -14,9 +14,9 @@ BEGIN
     IF OLD.is_live = TRUE AND NEW.is_live = FALSE THEN
         FOR winner IN winners LOOP
             CASE winner.rank
-                WHEN 1 THEN medal := 7; -- Gold
-                WHEN 2 THEN medal := 6; -- Silver
-                WHEN 3 THEN medal := 5; -- Bronze
+                WHEN 1 THEN medal := 1; -- Gold
+                WHEN 2 THEN medal := 2; -- Silver
+                WHEN 3 THEN medal := 3; -- Bronze
             END CASE;
 
             IF NOT EXISTS (

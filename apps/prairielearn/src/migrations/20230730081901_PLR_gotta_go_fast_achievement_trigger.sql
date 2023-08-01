@@ -14,7 +14,7 @@ BEGIN
     )
     -- Insert the user_id into plr_has_achieved and set achievement to 1
     INSERT INTO plr_has_achieved (user_id, achievement_id, amount)
-    SELECT user_id, 1, 1
+    SELECT user_id, 5, 1
     FROM shortest_duration;
   END IF;
   RETURN NEW;
