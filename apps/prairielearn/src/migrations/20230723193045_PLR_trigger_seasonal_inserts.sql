@@ -30,7 +30,7 @@ BEGIN
                     SELECT id
                     FROM PLR_seasonal_session
                     WHERE course_instance_id = NEW.course_instance_id
-                ) AND user_id = cred.user_id;
+                ) AND user_id = cred.user_id AND NEW.id = cred.session_id;
             ELSE
                 -- If the user_id doesn't exist, insert a new row
                 INSERT INTO PLR_seasonal_session_credentials (session_id, user_id, points, duration)
