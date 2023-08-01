@@ -678,21 +678,6 @@ module.exports.initExpress = function () {
   // END PRAIRIELEARN RANKED CLIENTS
   // -------------------------------
 
-  // ---------------------------------
-  // PRAIRIELEARN RANKED STUDENT PAGE
-  // ---------------------------------
-  app.use('/pl/course_instance/:course_instance_id/plrStudent', [
-    function (req, res, next) {
-      res.locals.navSubPage = 'plrStudent';
-      next();
-    },
-    require('./pages/plrStudent/plrStudent.js'),
-  ]);
-  // ------------------------------------
-  // END PRAIRIELEARN RANKED STUDENT PAGE
-  // ------------------------------------
-
-
   // Some course instance student pages only require course instance authorization (already checked)
   app.use(
     '/pl/course_instance/:course_instance_id/news_items',
@@ -1410,6 +1395,19 @@ module.exports.initExpress = function () {
     require('./middlewares/studentAssessmentAccess'),
     require('./pages/studentGradebook/studentGradebook'),
   ]);
+  // ---------------------------------
+  // PRAIRIELEARN RANKED STUDENT PAGE
+  // ---------------------------------
+  app.use('/pl/course_instance/:course_instance_id/plrStudent', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'plrStudent';
+      next();
+    },
+    require('./pages/plrStudent/plrStudent.js'),
+  ]);
+  // ------------------------------------
+  // END PRAIRIELEARN RANKED STUDENT PAGE
+  // ------------------------------------
   app.use('/pl/course_instance/:course_instance_id/assessments', [
     function (req, res, next) {
       res.locals.navSubPage = 'assessments';
