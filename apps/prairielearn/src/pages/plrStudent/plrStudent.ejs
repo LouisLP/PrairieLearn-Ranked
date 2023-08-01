@@ -19,7 +19,7 @@
   </head>
   <!-- BODY -->
   <body>
-    <%- include('../partials/navbar', {navPage: ''}); %>
+    <%- include('../partials/navbar'); %>
 
     <!-- Main content -->
     <main class="container">
@@ -93,8 +93,7 @@
         <!-- End first column... -->
         <!-- Second column: Profile Card -->
         <div class="maincardcontainer col-md-5 mt-3">
-          <%- include('../partials/plr/profileCard.ejs', { userId: userId, displayName: displayName,
-          course_instance_id: course_instance_id }); %>
+          <%- include('../partials/plr/profileCard.ejs'); %>
         </div>
       </div>
     </main>
