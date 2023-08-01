@@ -1395,6 +1395,15 @@ module.exports.initExpress = function () {
     require('./middlewares/studentAssessmentAccess'),
     require('./pages/studentGradebook/studentGradebook'),
   ]);
+  app.use('/pl/course_instance/:course_instance_id/assessments', [
+    function (req, res, next) {
+      res.locals.navSubPage = 'assessments';
+      next();
+    },
+    require('./middlewares/logPageView')('studentAssessments'),
+    require('./middlewares/studentAssessmentAccess'),
+    require('./pages/studentAssessments/studentAssessments'),
+  ]);
   // ---------------------------------
   // PRAIRIELEARN RANKED STUDENT PAGE
   // ---------------------------------
@@ -1408,15 +1417,6 @@ module.exports.initExpress = function () {
   // ------------------------------------
   // END PRAIRIELEARN RANKED STUDENT PAGE
   // ------------------------------------
-  app.use('/pl/course_instance/:course_instance_id/assessments', [
-    function (req, res, next) {
-      res.locals.navSubPage = 'assessments';
-      next();
-    },
-    require('./middlewares/logPageView')('studentAssessments'),
-    require('./middlewares/studentAssessmentAccess'),
-    require('./pages/studentAssessments/studentAssessments'),
-  ]);
   app.use('/pl/course_instance/:course_instance_id/assessment/:assessment_id', [
     require('./middlewares/selectAndAuthzAssessment'),
     require('./middlewares/logPageView')('studentAssessment'),
