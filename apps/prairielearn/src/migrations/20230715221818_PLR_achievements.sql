@@ -28,23 +28,23 @@ INSERT INTO
 VALUES
   (
     'Gold',
-    'Get rank 1 (colored differently) in a live quiz'
-    'workspace_premium',
+    'Rank 1 in a live quiz', -- Comma was missing here
+    'workspace_premium'
   ),
   (
     'Silver',
     'workspace_premium',
-    'Get rank 2 (colored differently) in a live quiz'
+    'Rank 2 in a live quiz'
   ),
   (
     'Bronze',
     'workspace_premium',
-    'Get rank 3 (colored differently) in a live quiz'
+    'Rank 3 in a live quiz'
   ),
   (
     'Hat Trick',
     'school',
-    '3 first place scores in a row'
+    'Rank 1, 3 live quizzes in a row'
   ),
   (
     'Gotta Go Fast',
@@ -54,7 +54,7 @@ VALUES
   (
     'Speed Demon',
     'no icon',
-    'Fastest time 5 live quizes in a row'
+    'Fastest time 5 live quizzes in a row'
   ),
   (
     'Always On Time',
@@ -66,11 +66,7 @@ VALUES
     'cookie',
     'Exactly half the maximum score (pass)'
   ),
-  (
-    'Perfect Score',
-    'no icon',
-    'Perfect score'
-  ),
+  ('Perfect Score', 'no icon', 'Perfect score'),
   (
     'Power Streak',
     'no icon',
@@ -80,5 +76,4 @@ VALUES
     'Unstoppable',
     'no icon',
     'Rank 1, 5 or more live quizzes in a row'
-  )
-;
+  );
