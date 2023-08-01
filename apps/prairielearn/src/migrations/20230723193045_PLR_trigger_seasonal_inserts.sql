@@ -20,7 +20,7 @@ BEGIN
             -- Check if the user_id already exists in PLR_seasonal_session_credentials for this session_id
             IF EXISTS (
                 SELECT 1 FROM PLR_seasonal_session_credentials
-                WHERE session_id = NEW.id AND user_id = cred.user_id
+                WHERE live_id = NEW.id AND user_id = cred.user_id
             ) THEN
                 -- If the user_id exists, update points and duration
                 UPDATE PLR_seasonal_session_credentials
