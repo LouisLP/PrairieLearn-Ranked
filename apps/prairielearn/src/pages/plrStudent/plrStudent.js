@@ -50,7 +50,7 @@ router.get('/', async function (req, res, next) {
   }
 });
 
-router.get('/pl/course_instance/:course_instance_id/plrStudent/:userId/update_display_name', function (req, res, next) {
+router.get('/pl/course_instance/2/plrStudent/:userId/update_display_name', function (req, res, next) {
   const userId = req.params.userId;
   const newDisplayName = req.query.new_display_name;
   console.log('newDisplayName: ', newDisplayName);

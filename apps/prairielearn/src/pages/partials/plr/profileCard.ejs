@@ -50,16 +50,9 @@
       console.log('URL Prefix: ' + urlPrefix);
       console.log('User ID: ' + userId);
       console.log('New Display Name: ' + newDisplayName);
-      fetch(
-        urlPrefix +
-          '/plrStudent/' +
-          userId +
-          '/update_display_name?new_display_name=' +
-          encodeURIComponent(newDisplayName),
-        {
-          method: 'GET',
-        },
-      )
+      fetch('/pl/course_instance/2/plrStudent/' + userId + '/update_display_name', {
+        method: 'GET',
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
