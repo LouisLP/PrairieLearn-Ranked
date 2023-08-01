@@ -22,3 +22,6 @@ CREATE TABLE IF NOT EXISTS PLR_live_session_credentials (
     FOREIGN KEY (user_id) REFERENCES PLR_students (user_id),
     FOREIGN KEY (session_id) REFERENCES PLR_live_session (id)
 );
+
+
+ALTER TABLE PLR_live_session ADD CONSTRAINT unique_assess_instance UNIQUE (assess_id, course_instance_id);

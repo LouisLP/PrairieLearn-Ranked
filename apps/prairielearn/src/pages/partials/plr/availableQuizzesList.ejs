@@ -1,11 +1,79 @@
+<!-- The rest of your EJS template (HTML code) -->
 <div class="card container p-3 mt-3" id="quizzes-card-staff">
   <h5 id="title">List of Available Quizzes</h5>
   <div class="row">
-    <!-- Iterate through the list of available quizzes with the "Live" (LV) tag -->
+    <!-- Iterate through the list of available quizzes -->
     <% quizzes.forEach(function(quiz) { %>
     <div class="col-md-12">
-      <button class="rounded-pill quiz"><%= quiz.title %></button>
+      <!-- Add data attributes to store assess_id and course_instance_id for each quiz -->
+      <button
+        class="rounded-pill quiz <%= quiz.is_live ? 'live-quiz' : '' %>"
+        data-assess-id="<%= quiz.id %>"
+        data-course-instance-id="<%= quiz.course_instance_id %>"
+        <% if (quiz.is_live) { %>disabled<% } %>
+      >
+        <%= quiz.title %>
+      </button>
     </div>
     <% }); %>
   </div>
 </div>
+
+<script>
+  // Function to set the quiz to live and update the button appearance
+  function setQuizToLive(button) {
+    const assessId = button.dataset.assessId;
+    const courseInstanceId = button.dataset.courseInstanceId;
+    const isLive = button.classList.contains('live-quiz');
+
+    console.log('Assessment ID: ' + assessId, 'Course instance id: ' + courseInstanceId);
+
+    // Perform the AJAX call using jQuery
+    $.ajax({
+      url: '/pl/course_instance/' + courseInstanceId + '/instructor/instance_admin/plrStaff',
+      method: 'POST',
+      contentType: 'application/json',
+      // Include the CSRF token as a header
+      headers: {
+        'X-CSRF-Token': '<%= __csrf_token %>',
+      },
+      data: JSON.stringify({ assessment_id: assessId, course_instance_id: courseInstanceId }),
+      success: function () {
+        // Toggle the button appearance to indicate the status change
+        if (button.classList.contains('live-quiz')) {
+          button.style.backgroundColor = ''; // Reset the background color
+          button.classList.remove('live-quiz'); // Remove the class
+          button.disabled = false; // Re-enable the button
+
+          // Re-enable all other buttons
+          quizButtons.forEach((b) => {
+            if (b !== button) { // Skip the button we just clicked
+              b.disabled = false;
+            }
+          });
+        } else {
+          button.style.backgroundColor = 'red'; // Change the background color to red
+          button.classList.add('live-quiz'); // Add a class to indicate it's a live quiz
+          // Disable all other buttons
+          quizButtons.forEach((b) => {
+            if (b !== button) { // Skip the button we just clicked
+              b.disabled = true;
+            }
+          });
+        }
+      },
+      error: function (xhr, status, error) {
+        // Handle error cases
+        console.error('Error updating quiz is_live status:', status, error);
+      },
+    });
+  }
+
+  // Add a click event listener to all quiz buttons
+  const quizButtons = document.querySelectorAll('.quiz');
+  quizButtons.forEach((button) => {
+    button.addEventListener('click', function () {
+      setQuizToLive(button);
+    });
+  });
+</script>

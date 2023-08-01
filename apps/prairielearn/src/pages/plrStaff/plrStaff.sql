@@ -11,3 +11,12 @@ WHERE
    AND assessments.course_instance_id = $1;
 
 -- ENDBLOCK
+
+-- BLOCK set_live_flag
+
+INSERT INTO PLR_live_session (assess_id, course_instance_id, is_live)
+VALUES ($1, $2, TRUE)
+ON CONFLICT (assess_id, course_instance_id)
+DO UPDATE SET is_live = NOT PLR_live_session.is_live;
+
+-- ENDBLOCK

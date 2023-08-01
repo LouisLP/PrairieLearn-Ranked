@@ -1,0 +1,18 @@
+{
+    "description": "Simulates a semester with pre-generated users and scores",
+    "params": [
+      {
+        "name": "number_2",
+        "description": "This should only be the number 2",
+        "default": "2"
+      }
+    ]
+  }
+  
+
+
+
+
+
+
+
