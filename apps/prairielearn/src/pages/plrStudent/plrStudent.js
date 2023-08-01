@@ -1,4 +1,7 @@
 const ERR = require('async-stacktrace');
+// File Stuff (for filtering prohibited words)
+const fs = require('fs');
+const path = require('path');
 // Routing Stuff
 var express = require('express');
 var router = express.Router();
@@ -53,9 +56,15 @@ router.post('/', async function (req, res, next) {
   if (req.body.__action === 'change-display-name') {
     var userId = req.body.userId;
     var newDisplayName = req.body.newDisplayName;
-    
-    await updateDisplayName(userId, newDisplayName);
-    res.redirect(req.originalUrl);
+
+    try {
+      await updateDisplayName(userId, newDisplayName);
+      res.redirect(req.originalUrl);
+    } catch (err) {
+      console.error(err);
+      // An error occurred, redirect back to the original page
+      res.redirect(req.originalUrl);
+    }
   } else {
     next(
       ERR.make(400, 'unknown __action', {
@@ -81,9 +90,37 @@ function getUserDisplayName(user_id) {
     });
   });
 }
+// Function to check profanity
+function profanityCheck(displayName) {
+  // Read the prohibited words from the file
+  const prohibitedWords = fs
+    .readFileSync(path.join(__dirname, 'prohibitedWords.txt'), 'utf-8')
+    .split('\n')
+    .map((word) => word.trim());
+
+  // Check if displayName is within the character limit
+  if (displayName.length > 30) {
+    throw new Error('Display name is too long (30 character limit).');
+  }
+
+  // Convert the display name to lowercase for the profanity check
+  const lowerCaseDisplayName = displayName.toLowerCase();
+
+  // Check if displayName contains any prohibited words
+  if (prohibitedWords.some((word) => lowerCaseDisplayName.includes(word))) {
+    throw new Error('Display name contains prohibited words.');
+  }
+}
 // Function to change/update USER DISPLAY NAME
 function updateDisplayName(userId, newDisplayName) {
   return new Promise((resolve, reject) => {
+    try {
+      profanityCheck(newDisplayName);
+    } catch (err) {
+      reject(err);
+      return;
+    }
+
     sqldb.query(sql.update_display_name, [userId, newDisplayName], function (err) {
       if (err) {
         reject(err);
