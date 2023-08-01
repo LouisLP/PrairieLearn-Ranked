@@ -8,16 +8,17 @@
   </div>
   <!-- Row 2: Change Display Name -->
   <div class="row">
-    <form name="display-name-form" class="form mb-4" method="POST">
-      <input type="hidden" name="__action" value="changeDisplayName" />
+    <form name="change-display-name-form" class="mb-3" method="POST">
+      <input type="hidden" name="__action" value="change-display-name" />
       <input type="hidden" name="__csrf_token" value="<%= __csrf_token %>" />
-      <input type="text" id="display-name-input" />
+      <input type="hidden" name="userId" value="<%= userId %>" />
+      <input type="text" name="newDisplayName" />
       <button
         type="submit"
         class="btn btn-outline-light btn-sm px-2"
         id="change-display-name-button"
       >
-        Change Display Name
+        Change Name
       </button>
     </form>
   </div>
@@ -34,45 +35,15 @@
   <div class="row py-2 mt-3" id="badge-display">
     <div class="col my-auto"><%- include('achievementList.ejs'); %></div>
   </div>
-
-  <script>
-    const userId = '<%= userId %>';
-    const urlPrefix = '<%= urlPrefix %>';
-
-    // Function to update the display name
-    function updateDisplayName(event) {
-      event.preventDefault(); // prevent form from submitting normally
-      const newDisplayName = document.querySelector('#display-name-input').value;
-
-      // Create FormData to append CSRF token
-      let formData = new FormData();
-      let csrfToken = '<%= __csrf_token %>';
-      console.log('URL Prefix: ' + urlPrefix);
-      console.log('User ID: ' + userId);
-      console.log('New Display Name: ' + newDisplayName);
-      fetch('/pl/course_instance/2/plrStudent/' + userId + '/update_display_name', {
-        method: 'GET',
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json(); // This returns a promise
-        })
-        .then((jsonResponse) => {
-          // Update the display name in the page
-          document.querySelector('#display-name').textContent = newDisplayName;
-        })
-        .catch((error) => {
-          console.error('Error updating display name:', error);
-          console.error('Error name:', error.name);
-          console.error('Error stack:', error.stack);
-        });
-    }
-
-    // Add a click event listener to the "Change Display Name" button
-    document
-      .querySelector('#change-display-name-button')
-      .addEventListener('click', updateDisplayName);
-  </script>
 </div>
+
+<script>
+  const userId = '<%= userId %>';
+  const urlPrefix = '<%= urlPrefix %>';
+
+  // Grab the value inputted into the text field
+  const changeDisplayNameForm = document.forms['change-display-name-form'];
+  const newDisplayName = changeDisplayNameForm.querySelector('input');
+
+  // Function to update the display name
+</script>
