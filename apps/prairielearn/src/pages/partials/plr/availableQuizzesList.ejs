@@ -1,13 +1,19 @@
-<!-- The rest of your EJS template (HTML code) -->
 <div class="card container p-3 mt-3" id="quizzes-card-staff">
-  <h5 id="title">List of Available Quizzes</h5>
   <div class="row">
+    <h4 class="text-white pl-3 mb-3 d-flex align-items-center">
+      <span class="material-symbols-outlined pr-1">
+        play_circle 
+      </span>
+       Available Live Quizzes
+    </h4>
+    
     <!-- Iterate through the list of available quizzes -->
     <% quizzes.forEach(function(quiz) { %>
     <div class="col-md-12">
       <!-- Add data attributes to store assess_id and course_instance_id for each quiz -->
       <button
-        class="rounded-pill quiz <%= quiz.is_live ? 'live-quiz' : '' %>"
+        id="available-quiz-button"
+        class="btn rounded p-2 mb-3 <%= quiz.is_live ? 'live-quiz' : '' %>"
         data-assess-id="<%= quiz.id %>"
         data-course-instance-id="<%= quiz.course_instance_id %>"
         <% if (quiz.is_live) { %>disabled<% } %>

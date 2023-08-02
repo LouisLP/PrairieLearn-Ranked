@@ -20,10 +20,10 @@
   <body>
     <%- include('../partials/navbar'); %>
     <!-- Main content -->
-    <main class="container">
+    <main class="container-fluid">
       <div class="row">
         <!-- First column: Scoreboards -->
-        <div class="col-md-7">
+        <div class="col-md-12 col-lg-7">
           <!-- Tabs to navigate between scoreboards -->
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -77,9 +77,8 @@
             <%- include('../partials/plr/allTimeScoreboard.ejs'); %>
           </div>
         </div>
-        <!-- Second column: Profile and Cards -->
-        <!-- Second column: Profile and Cards -->
-        <div class="maincardcontainer col-md-5 mt-3">
+        <!-- Second column: Available Quizzes List -->
+        <div class="maincardcontainer col-lg-5 col-md-12 mt-3" id="side-cards">
           <!-- Quizzes -->
           <%- include('../partials/plr/availableQuizzesList.ejs'); %>
         </div>
