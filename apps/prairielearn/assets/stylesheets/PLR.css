@@ -67,6 +67,10 @@ li {
 /* ============
    MISC ELEMENTS
    ============ */
+#scoreboards-and-tabs {
+  background-color: rgb(35, 35, 35);
+}
+
 /* Scoreboard tabs */
 .scoreboard,
 .scoreboard:hover {
