@@ -13,7 +13,7 @@
       <!-- Add data attributes to store assess_id and course_instance_id for each quiz -->
       <button
         id="available-quiz-button"
-        class="btn rounded p-2 mb-3 <%= quiz.is_live ? 'live-quiz' : '' %>"
+        class="btn rounded p-2 mb-3 quiz-button <%= quiz.is_live ? 'live-quiz' : '' %>"
         data-assess-id="<%= quiz.id %>"
         data-course-instance-id="<%= quiz.course_instance_id %>"
         <% if (quiz.is_live) { %>disabled<% } %>
@@ -76,7 +76,7 @@
   }
 
   // Add a click event listener to all quiz buttons
-  const quizButtons = document.querySelectorAll('.quiz');
+  const quizButtons = document.querySelectorAll('.quiz-button');
   quizButtons.forEach((button) => {
     button.addEventListener('click', function () {
       setQuizToLive(button);

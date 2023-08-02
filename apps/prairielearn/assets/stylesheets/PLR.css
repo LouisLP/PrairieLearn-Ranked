@@ -50,13 +50,13 @@ li {
 /* ============
    QUIZ BUTTONS
    ============ */
-#available-quiz-button {
+.quiz-button {
   color: white;
   border: white 1px solid;
   transform: background-color 1s ease;
 }
 
-#available-quiz-button:hover {
+.quiz-button:hover {
   border-color: rgb(187, 7, 7);
   background-color: rgb(31, 1, 1);
 }
