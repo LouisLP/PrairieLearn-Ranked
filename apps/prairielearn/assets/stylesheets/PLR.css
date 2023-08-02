@@ -55,12 +55,15 @@ li {
   border: white 1px solid;
   transform: background-color 1s ease;
 }
-
 .quiz-button:hover {
+  color: whitesmoke;
   border-color: rgb(187, 7, 7);
   background-color: rgb(31, 1, 1);
 }
-
+.live-quiz {
+  border-color: rgb(31, 1, 1);
+  background-color: rgb(187, 7, 7);
+}
 /* ============
    MISC ELEMENTS
    ============ */
