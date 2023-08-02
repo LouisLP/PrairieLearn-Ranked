@@ -23,11 +23,6 @@
 
     <!-- Main content -->
     <main class="container-fluid">
-      <!-- Fullscreen button -->
-      <button id="fullscreenButton" class="btn btn-small btn-dark d-flex align-items-center m-4">
-        <span class="material-symbols-outlined pr-1"> fullscreen </span>
-        Fullscreen
-      </button>
       <div class="row">
         <!-- First column: Scoreboards (and tabs to navigate between) -->
         <div id="scoreboards-and-tabs" class="col-md-12 col-lg-7">
@@ -91,24 +86,4 @@
       </div>
     </main>
   </body>
-  <!-- For fullscreening the scoreboards... -->
-  <script>
-    var fullscreenButton = document.getElementById('fullscreenButton');
-    var contentToFullscreen = document.getElementById('scoreboards-and-tabs');
-
-    fullscreenButton.addEventListener('click', function () {
-      if (contentToFullscreen.requestFullscreen) {
-        contentToFullscreen.requestFullscreen();
-      } else if (contentToFullscreen.mozRequestFullScreen) {
-        /* Firefox */
-        contentToFullscreen.mozRequestFullScreen();
-      } else if (contentToFullscreen.webkitRequestFullscreen) {
-        /* Chrome, Safari and Opera */
-        contentToFullscreen.webkitRequestFullscreen();
-      } else if (contentToFullscreen.msRequestFullscreen) {
-        /* IE/Edge */
-        contentToFullscreen.msRequestFullscreen();
-      }
-    });
-  </script>
 </html>
