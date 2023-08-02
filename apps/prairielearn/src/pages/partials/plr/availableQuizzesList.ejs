@@ -66,6 +66,8 @@
             }
           });
         }
+        // Save the new state in local storage
+        localStorage.setItem(`quiz-${assessId}`, !isLive);
       },
       error: function (xhr, status, error) {
         // Handle error cases
@@ -81,4 +83,23 @@
       setQuizToLive(button);
     });
   });
+
+  // When the page loads
+  window.onload = function() {
+    quizButtons.forEach((button) => {
+      const assessId = button.dataset.assessId;
+      const isLive = localStorage.getItem(`quiz-${assessId}`);
+      if (isLive === 'true') {
+        button.classList.add('live-quiz');
+        // Disable all other buttons
+        quizButtons.forEach((b) => {
+          if (b !== button) {
+            b.disabled = true;
+          }
+        });
+      } else {
+        button.classList.remove('live-quiz');
+      }
+    });
+  };
 </script>
