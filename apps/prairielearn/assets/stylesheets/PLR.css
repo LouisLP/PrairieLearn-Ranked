@@ -67,12 +67,6 @@ li {
 /* ============
    MISC ELEMENTS
    ============ */
-.join-session {
-  margin-bottom: 2em;
-  padding-left: 1em;
-  padding-right: 1em;
-  font-size: 1.4em;
-}
 /* Scoreboard tabs */
 .scoreboard,
 .scoreboard:hover {
