@@ -80,10 +80,33 @@ li {
   flex-wrap: nowrap;
 }
 
-.table-responsive {
+#live-scoreboard,
+#seasonal-scoreboard,
+#all-time-scoreboard {
   overflow-y: scroll;
   height: 100vh;
   animation: tableIntro 0.3s ease;
+  scrollbar-width: thin; /* This is for Firefox */
+  scrollbar-color: black transparent; /* Also for Firefox */
+}
+
+#live-scoreboard::-webkit-scrollbar,
+#seasonal-scoreboard::-webkit-scrollbar,
+#all-time-scoreboard::-webkit-scrollbar {
+  width: 3px;
+}
+
+#live-scoreboard::-webkit-scrollbar-thumb,
+#seasonal-scoreboard::-webkit-scrollbar-thumb,
+#all-time-scoreboard::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 10px;
+}
+
+#live-scoreboard::-webkit-scrollbar-track,
+#seasonal-scoreboard::-webkit-scrollbar-track,
+#all-time-scoreboard::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 @keyframes tableIntro {
