@@ -1,13 +1,19 @@
-<!-- The rest of your EJS template (HTML code) -->
 <div class="card container p-3 mt-3" id="quizzes-card-staff">
-  <h5 id="title">List of Available Quizzes</h5>
   <div class="row">
+    <h4 class="text-white pl-3 mb-3 d-flex align-items-center">
+      <span class="material-symbols-outlined pr-1">
+        play_circle 
+      </span>
+       Available Live Quizzes
+    </h4>
+    
     <!-- Iterate through the list of available quizzes -->
     <% quizzes.forEach(function(quiz) { %>
     <div class="col-md-12">
       <!-- Add data attributes to store assess_id and course_instance_id for each quiz -->
       <button
-        class="rounded-pill quiz <%= quiz.is_live ? 'live-quiz' : '' %>"
+        id="available-quiz-button"
+        class="btn rounded p-2 mb-3 quiz-button <%= quiz.is_live ? 'live-quiz' : '' %>"
         data-assess-id="<%= quiz.id %>"
         data-course-instance-id="<%= quiz.course_instance_id %>"
         <% if (quiz.is_live) { %>disabled<% } %>
@@ -52,7 +58,6 @@
             }
           });
         } else {
-          button.style.backgroundColor = 'red'; // Change the background color to red
           button.classList.add('live-quiz'); // Add a class to indicate it's a live quiz
           // Disable all other buttons
           quizButtons.forEach((b) => {
@@ -61,6 +66,8 @@
             }
           });
         }
+        // Save the new state in local storage
+        localStorage.setItem(`quiz-${assessId}`, !isLive);
       },
       error: function (xhr, status, error) {
         // Handle error cases
@@ -70,10 +77,29 @@
   }
 
   // Add a click event listener to all quiz buttons
-  const quizButtons = document.querySelectorAll('.quiz');
+  const quizButtons = document.querySelectorAll('.quiz-button');
   quizButtons.forEach((button) => {
     button.addEventListener('click', function () {
       setQuizToLive(button);
     });
   });
+
+  // When the page loads
+  window.onload = function() {
+    quizButtons.forEach((button) => {
+      const assessId = button.dataset.assessId;
+      const isLive = localStorage.getItem(`quiz-${assessId}`);
+      if (isLive === 'true') {
+        button.classList.add('live-quiz');
+        // Disable all other buttons
+        quizButtons.forEach((b) => {
+          if (b !== button) {
+            b.disabled = true;
+          }
+        });
+      } else {
+        button.classList.remove('live-quiz');
+      }
+    });
+  };
 </script>

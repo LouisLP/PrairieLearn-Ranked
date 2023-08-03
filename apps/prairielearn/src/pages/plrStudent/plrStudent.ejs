@@ -22,21 +22,10 @@
     <%- include('../partials/navbar', {navPage: ''}); %>
 
     <!-- Main content -->
-    <main class="container">
+    <main class="container-fluid">
       <div class="row">
-        <!-- First column: Scoreboards -->
-        <div class="col-md-7">
-          <p id="current-user"></p>
-          <a
-            href="/join-session"
-            class="btn btn-dark rounded-pill join-session mb-3"
-            id="nav-join-session-tab"
-            role="tab"
-            aria-controls="nav-join-session"
-            aria-selected="false"
-          >
-            Join Live Session
-          </a>
+        <!-- First column: Scoreboards (and tabs to navigate between) -->
+        <div id="scoreboards-and-tabs" class="col-md-12 col-lg-7">
           <!-- Tabs to navigate between scoreboards -->
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -90,43 +79,9 @@
             <%- include('../partials/plr/allTimeScoreboard.ejs'); %>
           </div>
         </div>
-        <!-- End first column... -->
         <!-- Second column: Profile Card -->
-        <div class="maincardcontainer col-md-5 mt-3">
-          <div class="card container p-3" id="profile-card">
-            <!-- Row 1: Include profile icon, name, and rank in the semester -->
-            <div class="row">
-              <h5>
-                <span class="material-symbols-outlined align-bottom px-2"> person </span>
-                {Display Name}
-              </h5>
-            </div>
-            <!-- Row 2: Display Name -->
-            <div class="row">
-              <form method="post" action="" class="form mb-4">
-                <input type="text" />
-                <!-- Submission of form -->
-                <button type="submit" class="btn btn-outline-light btn-sm px-2">
-                  Change Display Name
-                </button>
-              </form>
-            </div>
-            <!-- Row 2: Displayed Badges -->
-            <div class="row py-2" id="badge-display">
-              <div class="col my-auto">
-                <h5>Displayed Badges</h5>
-                <span class="material-symbols-outlined align-bottom px-2"> elderly </span>
-                <span class="material-symbols-outlined align-bottom px-2"> rocket_launch </span>
-                <span class="material-symbols-outlined align-bottom px-2"> school </span>
-              </div>
-            </div>
-            <!-- Row 3: Achievements -->
-            <div class="row py-2 mt-3" id="badge-display">
-              <div class="col my-auto">
-                <%- include('../partials/plr/achievementList.ejs'); %>
-              </div>
-            </div>
-          </div>
+        <div class="maincardcontainer col-lg-5 col-md-12 mt-3" id="side-cards">
+          <%- include('../partials/plr/profileCard.ejs'); %>
         </div>
       </div>
     </main>
