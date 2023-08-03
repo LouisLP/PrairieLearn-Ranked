@@ -3,6 +3,7 @@ CREATE
 OR REPLACE FUNCTION send_notification () RETURNS TRIGGER AS $$ 
 BEGIN 
    -- This will send a notification with the table name, the operation, and the new row data
+   -- DO NOT ADD ANYTHING TO THIS
    PERFORM pg_notify(
       'table_change_notification',
       ''

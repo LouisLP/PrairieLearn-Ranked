@@ -87,9 +87,14 @@
       scoreCell.textContent = score.points;
       var time = score.duration;
       if (time.seconds == undefined){
-        timeCell.textContent = "0:00";
+        timeCell.textContent = "00:00";
+      } else if (time.minutes == undefined) {
+        var formattedSeconds = seconds < 10 ? `0${time.seconds}` : String(time.seconds);
+        timeCell.textContent = `00:${formattedSeconds}`;
       } else {
-        timeCell.textContent = time.minutes + ':' + time.seconds;
+        var formattedMinutes = time.minutes < 10 ? `0${time.minutes}` : String(time.minutes);
+        var formattedSeconds = time.seconds < 10 ? `0${time.seconds}` : String(time.seconds);
+        timeCell.textContent = `${formattedMinutes}:${formattedSeconds}`;
       }
       row.appendChild(rankCell);
       row.appendChild(nameCell);

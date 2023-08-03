@@ -1,0 +1,20 @@
+{
+    "uuid": "f509413a-bd58-4d8e-8790-502498cf0b96",
+    "type": "Homework",
+    "title": "Testsessment",
+    "set": "Live Assessment",
+    "number": "4",
+    "allowAccess": [
+            {
+                "startDate": "2023-08-02T20:00:00",
+                "endDate": "2023-10-03T20:00:00",
+                "credit": 100
+            }
+        ],
+    "zones": [    {
+            "questions": [
+                {"id": "LVQ_1", "points": 1, "maxPoints": 50}
+            ]
+        }
+    ]
+}
