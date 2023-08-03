@@ -1,3 +1,23 @@
+<style>
+
+.gold-rank {
+  border: 3px solid gold;
+}
+.silver-rank {
+  border: 3px solid silver;
+}
+.bronze-rank {
+  border: 3px solid #cd7f32; /* Bronze color */
+}
+
+ /* Add the hover effect */
+ tr:hover {
+    background-color: #8d8282; /* Light gray color */
+    transition: background-color 0.3s ease; /* Smooth transition */
+  }
+
+</style>
+
 <div
   class="tab-pane fade text-white show active"
   id="nav-live-scoreboard"
@@ -96,6 +116,16 @@
       row.appendChild(achievementCell);
       row.appendChild(scoreCell);
       row.appendChild(timeCell);
+
+       // Add CSS classes to highlight the top three ranks with gold, silver, and bronze borders
+       if (index === 0) {
+        row.classList.add('gold-rank');
+      } else if (index === 1) {
+        row.classList.add('silver-rank');
+      } else if (index === 2) {
+        row.classList.add('bronze-rank');
+      }
+
       tableBody.appendChild(row);
     });
   }
