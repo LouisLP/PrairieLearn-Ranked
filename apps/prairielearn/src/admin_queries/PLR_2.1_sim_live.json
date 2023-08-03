@@ -1,9 +1,9 @@
 {
-    "description": "Simulate the a Live Session, missing Scott",
+    "description": "(Optional) This query is the same as PLR_2_sim_live with the exception that Scott is missing in order to test the always on time achievement.",
     "params": [
         {
           "name": "assessment_id",
-          "description": "These should go through 100-104",
+          "description": "These should go through 100-104 to match the assessment generated in PLR_1_live_sessions.",
           "default": "100"
         }
        ]

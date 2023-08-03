@@ -1,3 +1,3 @@
 {
-    "description": "Populate necessary fields"
+    "description": "This query runs on click, it generates 14 users with IDs 2-15. An error might be caused if new users are already added. It also enrolls these students into course instance 2 (test course). Lastly it creates 5 test assessments IDs ranging from 100-104."
   }

@@ -13,12 +13,8 @@ WITH
       (8, 'IAmBecomePL@ubc.ca', 'PL God'),
       (9, 'LordAndSaviour@ubc.ca', 'The Almighty Nathan'),
       (10, 'TheReverseFlash@ubc.ca', 'Eobard Thawne'),
-      (11, 'GottaGetThatMoney@ubc.ca', 'Eugene Crabs'),
-      (
-        12,
-        'CodeineGotMeTripping@ubc.ca',
-        'Don Spongiver'
-      ),
+      (11, 'GottaGetThatMoney@ubc.ca', 'Eugene Krabs'),
+      (12, 'CodeineGotMeTripping@ubc.ca', 'Don Spongiver'),
       (13, 'IAmKenough@ubc.ca', 'Ken'),
       (14, 'UncleBenis#Dead@ubc.ca', 'Miles Morales'),
       (15, 'LostMyMoney@ubc.ca', 'G@mb71ng @dd1<t')
