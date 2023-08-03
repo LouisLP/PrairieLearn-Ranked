@@ -1,6 +1,8 @@
+-- This trigger updates our achievements table with gold, silver, and bronze for the top 3 students in a live session
 CREATE
 OR REPLACE FUNCTION assign_medals () RETURNS TRIGGER AS $$
 DECLARE
+    -- Here we select the top 3 students in a live session
     winners CURSOR FOR 
     SELECT user_id, rank 
     FROM PLR_live_session_credentials 
@@ -11,6 +13,7 @@ DECLARE
     winner RECORD;
     medal BIGINT;
 BEGIN
+    -- We then iterate through the top 3 students and assign them gold, silver, and bronze medals
     IF OLD.is_live = TRUE AND NEW.is_live = FALSE THEN
         FOR winner IN winners LOOP
             CASE winner.rank
@@ -33,6 +36,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--This trigger listens to PLR_live_session table for changes in is_live column
 CREATE TRIGGER assign_medals_trigger
 AFTER
 UPDATE OF is_live ON PLR_live_session FOR EACH ROW

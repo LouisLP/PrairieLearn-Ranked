@@ -1,3 +1,4 @@
+-- This trigger removes the always on time achievement if a student misses a live session.
 CREATE
 OR REPLACE FUNCTION remove_aot_achievement () RETURNS TRIGGER AS $$
 DECLARE
@@ -26,6 +27,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- This trigger listens to the plr_live_session table
 CREATE TRIGGER remove_aot_achievement_trigger
 AFTER
 UPDATE OF is_live ON plr_live_session FOR EACH ROW WHEN (NEW.is_live IS FALSE)
@@ -43,6 +45,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- This trigger listens to the plr_students table
 CREATE TRIGGER insert_aot_achievement_trigger
 AFTER INSERT ON plr_students FOR EACH ROW
 EXECUTE FUNCTION insert_aot_achievement ();

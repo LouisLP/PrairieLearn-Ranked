@@ -1,3 +1,4 @@
+-- This trigger updates our achievements table with the gotta go fast achievement for the student with the shortest duration in a live session
 CREATE
 OR REPLACE FUNCTION gotta_go_fast () RETURNS TRIGGER AS $$
 BEGIN

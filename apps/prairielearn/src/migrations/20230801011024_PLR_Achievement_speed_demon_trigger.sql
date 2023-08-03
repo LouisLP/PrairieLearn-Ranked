@@ -1,3 +1,4 @@
+-- This trigger updates our achievements table when a user has gotten the fast time 5 sessions in a row.
 CREATE
 OR REPLACE FUNCTION speed_demon_achievement () RETURNS TRIGGER AS $$
 DECLARE
@@ -37,6 +38,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Create the trigger on the plr_live_session table
 CREATE TRIGGER speed_demon_achievement_trigger
 AFTER
 UPDATE OF is_live ON plr_live_session FOR EACH ROW WHEN (NEW.is_live IS FALSE)
