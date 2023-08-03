@@ -20,10 +20,15 @@
   <body>
     <%- include('../partials/navbar'); %>
     <!-- Main content -->
-    <main class="container">
+    <main class="container-fluid">
+      <!-- Fullscreen button -->
+      <button id="fullscreenButton" class="btn btn-small btn-dark d-flex align-items-center m-4">
+        <span class="material-symbols-outlined pr-1"> fullscreen </span>
+        Fullscreen Scoreboards
+      </button>
       <div class="row">
-        <!-- First column: Scoreboards -->
-        <div class="col-md-7">
+        <!-- First column: Scoreboards (and tabs to navigate between) -->
+        <div id="scoreboards-and-tabs" class="col-md-12 col-lg-7">
           <!-- Tabs to navigate between scoreboards -->
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -77,13 +82,32 @@
             <%- include('../partials/plr/allTimeScoreboard.ejs'); %>
           </div>
         </div>
-        <!-- Second column: Profile and Cards -->
-        <!-- Second column: Profile and Cards -->
-        <div class="maincardcontainer col-md-5 mt-3">
+        <!-- Second column: Available Quizzes List -->
+        <div class="maincardcontainer col-lg-5 col-md-12 mt-3" id="side-cards">
           <!-- Quizzes -->
           <%- include('../partials/plr/availableQuizzesList.ejs'); %>
         </div>
       </div>
     </main>
   </body>
+  <!-- For fullscreening the scoreboards... -->
+  <script>
+    var fullscreenButton = document.getElementById('fullscreenButton');
+    var contentToFullscreen = document.getElementById('scoreboards-and-tabs');
+
+    fullscreenButton.addEventListener('click', function () {
+      if (contentToFullscreen.requestFullscreen) {
+        contentToFullscreen.requestFullscreen();
+      } else if (contentToFullscreen.mozRequestFullScreen) {
+        /* Firefox */
+        contentToFullscreen.mozRequestFullScreen();
+      } else if (contentToFullscreen.webkitRequestFullscreen) {
+        /* Chrome, Safari and Opera */
+        contentToFullscreen.webkitRequestFullscreen();
+      } else if (contentToFullscreen.msRequestFullscreen) {
+        /* IE/Edge */
+        contentToFullscreen.msRequestFullscreen();
+      }
+    });
+  </script>
 </html>
