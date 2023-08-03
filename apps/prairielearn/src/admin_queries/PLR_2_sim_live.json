@@ -1,0 +1,10 @@
+{
+    "description": "This query fills out assessment_instances table with scores for each of the generated students from the PLR_1_start_sessions.",
+    "params": [
+        {
+          "name": "assessment_id",
+          "description": "These should go through 100-104 to match the assessments generated in PLR_1_start_sessions.",
+          "default": "100"
+        }
+       ]
+  }
