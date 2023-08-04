@@ -9,7 +9,7 @@ FROM
 WHERE
    course_instance_id = $1
 ORDER BY
-   points DESC;
+   rank DESC;
 -- ENDBLOCK
 
 -- BLOCK get_alltime_results
@@ -24,7 +24,7 @@ FROM
 WHERE
    course_id = $1
 ORDER BY
-   points DESC;
+   rank DESC;
 -- ENDBLOCK
 
 -- BLOCK get_live_results
@@ -40,5 +40,5 @@ FROM
 WHERE
    is_live = TRUE
 ORDER BY
-   points DESC;
+   rank DESC;
 -- ENDBLOCK
