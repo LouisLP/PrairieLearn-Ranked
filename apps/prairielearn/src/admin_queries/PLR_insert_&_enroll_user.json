@@ -1,0 +1,25 @@
+{
+    "description": "Insert and enroll a user. be careful to not insert duplicate user_ids",
+    "params": [
+    {
+        "name": "user_id",
+        "description": "Pick a userID (1 is the dev user)",
+        "default": "2"
+    },
+     {
+        "name": "uid",
+        "description": "Insert an email for the user",
+        "default": "PLSUX@gmail.com"
+    },
+     {
+        "name": "name",
+        "description": "Choose a name for the user",
+        "default": "Eugene Krabs"
+    },
+    {
+       "name": "course_instance_id",
+       "description": "Choose a course instance to enroll the user in (2 is the test instance)",
+       "default": "2"
+    }
+    ]
+  }

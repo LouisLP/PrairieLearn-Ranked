@@ -1,0 +1,16 @@
+{
+    "description": "Attach an achievement to a user",
+    "params": [
+     {
+       "name": "user_id",
+       "description": "Choose a user",
+       "default": "1"
+     },
+        {
+        "name": "achievement_id",
+        "description": "Choose an achievement",
+        "default": "1"
+        }
+    ]
+  }
+  

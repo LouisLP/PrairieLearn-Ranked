@@ -1,0 +1,25 @@
+{
+    "description": "Insert an assessment for pure database testing purposes",
+    "params": [
+    {
+        "name": "assessment_id",
+        "description": "Select an assessment ID",
+        "default": "100"
+    },
+     {
+        "name": "title",
+        "description": "Choose a title for the assessment",
+        "default": "Not A Real Assessment"
+    },
+     {
+        "name": "course_instance_id",
+        "description": "Choose the course instance ID to attach this assessment too (2 is the test course)",
+        "default": "2"
+    },
+    {
+       "name": "assessment_set_id",
+       "description": "Choose the assessment set to attach this to (15 is live assessments)",
+       "default": "15"
+    }
+    ]
+  }
