@@ -28,17 +28,17 @@ INSERT INTO
 VALUES
   ( -- ID 1
     'Gold',
-    'workspace_premium',
+    'counter_1',
     'Rank 1 in a live quiz'
   ),
   ( -- ID 2
     'Silver',
-    'workspace_premium',
+    'counter_2',
     'Rank 2 in a live quiz'
   ),
   ( -- ID 3
     'Bronze',
-    'workspace_premium',
+    'counter_3',
     'Rank 3 in a live quiz'
   ),
   ( -- ID 4
