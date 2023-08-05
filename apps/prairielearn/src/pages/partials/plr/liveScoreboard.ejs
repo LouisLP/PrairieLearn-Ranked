@@ -89,7 +89,7 @@
       if (time.seconds == undefined){
         timeCell.textContent = "00:00";
       } else if (time.minutes == undefined) {
-        var formattedSeconds = seconds < 10 ? `0${time.seconds}` : String(time.seconds);
+        var formattedSeconds = time.seconds < 10 ? `0${time.seconds}` : String(time.seconds);
         timeCell.textContent = `00:${formattedSeconds}`;
       } else {
         var formattedMinutes = time.minutes < 10 ? `0${time.minutes}` : String(time.minutes);
