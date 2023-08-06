@@ -1,7 +1,13 @@
 -- BLOCK get_seasonal_results
 SELECT
    display_name,
-   points
+   points,
+   (
+      SELECT ARRAY_AGG(PLR_achievements.icon_name)
+      FROM PLR_achievements
+      JOIN PLR_has_achieved ON PLR_achievements.id = PLR_has_achieved.achievement_id
+      WHERE PLR_has_achieved.user_id = PLR_students.user_id
+   ) AS achievements
 FROM
    PLR_seasonal_session_CREDENTIALS
    JOIN PLR_students USING (user_id)
@@ -16,7 +22,13 @@ ORDER BY
 SELECT
    display_name,
    points,
-   created_at
+   created_at,
+   (
+      SELECT ARRAY_AGG(PLR_achievements.icon_name)
+      FROM PLR_achievements
+      JOIN PLR_has_achieved ON PLR_achievements.id = PLR_has_achieved.achievement_id
+      WHERE PLR_has_achieved.user_id = PLR_students.user_id
+   ) AS achievements
 FROM
    PLR_seasonal_session_CREDENTIALS
    JOIN PLR_students USING (user_id)
@@ -32,7 +44,13 @@ SELECT
    display_name,
    points,
    rank,
-   duration
+   duration,
+   (
+      SELECT ARRAY_AGG(PLR_achievements.icon_name)
+      FROM PLR_achievements
+      JOIN PLR_has_achieved ON PLR_achievements.id = PLR_has_achieved.achievement_id
+      WHERE PLR_has_achieved.user_id = PLR_students.user_id
+   ) AS achievements
 FROM
    PLR_live_session_CREDENTIALS
    JOIN PLR_students USING (user_id)

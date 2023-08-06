@@ -22,21 +22,24 @@
   </div>
 </div>
 <script>
-  
+  // Initial results from the server
   results = <%- JSON.stringify(locals.liveResults) %>;
+  // Update the scoreboard with the initial results
   updateScores(results);
-
+  // Grab the course instance id from the page
   const courseInstanceId = '<%= course_instance.id %>';
+  // EventSource for live updates
   const source = new EventSource(`/pl/course_instance/${courseInstanceId}/plrStudent/live_updates`);
 
+  // Handle errors in the connection
   source.addEventListener('error', function (e) {
     console.error('EventSource failed:', e);
   });
-
+  // Log messages from the server
   source.onmessage = function (event) {
     console.log('got a message from server!');
   };
-
+  // Listen for updates to the scoreboard
   source.addEventListener(
     'scores',
     function (event) {
@@ -50,7 +53,7 @@
     },
     false,
   );
-
+  // Listen for updates to the number of connected users
   source.addEventListener(
     'connected',
     function (event) {
@@ -60,11 +63,14 @@
     },
     false,
   );
-
+  // Function to update the live scoreboard
   function updateScores(scores) {
+    // Get the table body
     const tableBody = document.querySelector('#live-results');
     tableBody.innerHTML = '';
+    // Filter out scores that are not for this course instance
     scores = getCourseRelevant(scores);
+    // Handle empty scores
     if (scores.length === 0) {
       const row = document.createElement('tr');
       const cell = document.createElement('td');
@@ -73,29 +79,24 @@
       row.appendChild(cell);
       tableBody.appendChild(row);
     }
+    // Iterate through the scores and add them to the table
     scores.forEach((score, index) => {
       const row = document.createElement('tr');
       const rankCell = document.createElement('th');
       const nameCell = document.createElement('td');
-      const achievementCell = document.createElement('td');
       const scoreCell = document.createElement('td');
-      const timeCell = document.createElement('td');
+
+      // Set the content of each cell
       rankCell.setAttribute('scope', 'row');
       rankCell.textContent = score.rank;
       nameCell.textContent = score.display_name;
-      achievementCell.textContent = '';
       scoreCell.textContent = score.points;
-      var time = score.duration;
-      if (time.seconds == undefined){
-        timeCell.textContent = "00:00";
-      } else if (time.minutes == undefined) {
-        var formattedSeconds = time.seconds < 10 ? `0${time.seconds}` : String(time.seconds);
-        timeCell.textContent = `00:${formattedSeconds}`;
-      } else {
-        var formattedMinutes = time.minutes < 10 ? `0${time.minutes}` : String(time.minutes);
-        var formattedSeconds = time.seconds < 10 ? `0${time.seconds}` : String(time.seconds);
-        timeCell.textContent = `${formattedMinutes}:${formattedSeconds}`;
-      }
+
+      // Create achievement and time cells (done in functions)
+      const achievementCell = createAchievementCell(score.achievements);
+      const timeCell = createTimeCell(score.duration);
+
+      // Add the cells to the row
       row.appendChild(rankCell);
       row.appendChild(nameCell);
       row.appendChild(achievementCell);
@@ -104,6 +105,8 @@
       tableBody.appendChild(row);
     });
   }
+
+  // Handle closing the connection when the window is closed
   window.addEventListener('beforeunload', function () {
     var req = new XMLHttpRequest();
 
@@ -114,8 +117,41 @@
     req.send(JSON.stringify({ id: clientId }));
   });
 
+  // Filter out scores that are not for this course instance
   function getCourseRelevant(results){
     const realID = '<%= course_instance.id %>';
     return results.filter((results) => results.course_instance_id != realID);
+  }
+  // Achievements are more complex to go through each one
+  function createAchievementCell(achievements) {
+    const achievementCell = document.createElement('td');
+    if (achievements) {
+      achievements.forEach(achievement => {
+        const badgeSpan = document.createElement('span');
+        badgeSpan.className = 'material-symbols-outlined align-bottom';
+        badgeSpan.textContent = achievement;
+        achievementCell.appendChild(badgeSpan);
+      });
+    } else {
+      const noBadgeParagraph = document.createElement('p');
+      noBadgeParagraph.textContent = 'No badges earned.';
+      achievementCell.appendChild(noBadgeParagraph);
+    }
+    return achievementCell;
+  }
+  // Time is also more complex to format the time
+  function createTimeCell(time) {
+    const timeCell = document.createElement('td');
+    var formattedTime = "00:00";
+    if (time.seconds !== undefined) {
+      var formattedSeconds = time.seconds < 10 ? `0${time.seconds}` : String(time.seconds);
+      formattedTime = `00:${formattedSeconds}`;
+      if (time.minutes !== undefined) {
+        var formattedMinutes = time.minutes < 10 ? `0${time.minutes}` : String(time.minutes);
+        formattedTime = `${formattedMinutes}:${formattedSeconds}`;
+      }
+    }
+    timeCell.textContent = formattedTime;
+    return timeCell;
   }
 </script>
