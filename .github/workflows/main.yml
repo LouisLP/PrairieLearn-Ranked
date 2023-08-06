@@ -75,16 +75,24 @@ jobs:
       # https://prairielearn.readthedocs.io/en/latest/externalGrading/#running-locally-for-development
       #
       # We put the Postgres data on a tmpfs volume, which should be much faster.
-      run: docker run -td -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/prairielearn:/jobs --tmpfs=/var/postgres -e HOST_JOBS_DIR=/tmp/prairielearn --name=test_container prairielearn/prairielearn /bin/bash
-    - name: Run the Python linter
-      run: docker exec test_container /PrairieLearn/docker/lint_python.sh
-    - name: Run the JavaScript linter
-      run: docker exec test_container /PrairieLearn/docker/lint_js.sh
-    - name: Run the HTML linter
-      run: docker exec test_container /PrairieLearn/docker/lint_html.sh
-    # This is run outside the container so that it can see the full repository.
-    - name: Run the links linter
-      run: make lint-links
+
+      ### PLR (Since we don't need to use their linters, we will comment out these steps, as we only need to test the functionality and their tests.)
+
+    #   run: docker run -td -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/prairielearn:/jobs --tmpfs=/var/postgres -e HOST_JOBS_DIR=/tmp/prairielearn --name=test_container prairielearn/prairielearn /bin/bash
+    # - name: Run the Python linter
+    #   run: docker exec test_container /PrairieLearn/docker/lint_python.sh
+    # - name: Run the JavaScript linter
+    #   run: docker exec test_container /PrairieLearn/docker/lint_js.sh
+    # - name: Run the HTML linter
+    #   run: docker exec test_container /PrairieLearn/docker/lint_html.sh
+    # # This is run outside the container so that it can see the full repository.
+    # - name: Run the links linter
+    #   run: make lint-links
+
+
+      ## END Lint Tests
+
+
     - name: Run the Python typechecker
       run: docker exec test_container /PrairieLearn/docker/typecheck_python.sh
     # The rest of our code is typechecked in the `build` Makefile target, which
