@@ -58,5 +58,5 @@ FROM
 WHERE
    is_live = TRUE
 ORDER BY
-   points DESC;
+   rank DESC;
 -- ENDBLOCK
