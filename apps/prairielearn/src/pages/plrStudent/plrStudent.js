@@ -52,28 +52,28 @@ router.get('/', async function (req, res, next) {
   }
 });
 
-router.post('/', async function (req, res, next) {
-  if (req.body.__action === 'change-display-name') {
-    var userId = req.body.userId;
-    var newDisplayName = req.body.newDisplayName;
+// router.post('/', async function (req, res, next) {
+//   if (req.body.__action === 'change-display-name') {
+//     var userId = req.body.userId;
+//     var newDisplayName = req.body.newDisplayName;
 
-    try {
-      await updateDisplayName(userId, newDisplayName);
-      res.redirect(req.originalUrl);
-    } catch (err) {
-      console.error(err);
-      // An error occurred, redirect back to the original page
-      res.redirect(req.originalUrl);
-    }
-  } else {
-    next(
-      ERR.make(400, 'unknown __action', {
-        body: req.body,
-        locals: res.locals,
-      }),
-    );
-  }
-});
+//     try {
+//       await updateDisplayName(userId, newDisplayName);
+//       res.redirect(req.originalUrl);
+//     } catch (err) {
+//       console.error(err);
+//       // An error occurred, redirect back to the original page
+//       res.redirect(req.originalUrl);
+//     }
+//   } else {
+//     next(
+//       ERR.make(400, 'unknown __action', {
+//         body: req.body,
+//         locals: res.locals,
+//       }),
+//     );
+//   }
+// });
 
 // ---------
 // FUNCTIONS
