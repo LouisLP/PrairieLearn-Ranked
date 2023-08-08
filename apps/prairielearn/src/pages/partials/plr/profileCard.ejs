@@ -22,16 +22,29 @@
       </button>
     </form>
   </div>
-  <!-- Row 2: Achieved Badges -->
-  <div class="row py-2" id="badge-display">
+  <!-- Row 3: Achievements -->
+  <h3 class="mt-4">Achievements</h3>
+  <!-- Achieved -->
+  <div class="row py-2 mt-3" id="badge-display">
     <div class="col my-auto">
-      <h5>Achieved Achievements</h5>
-      <span class="material-symbols-outlined align-bottom px-2"> elderly </span>
-      <span class="material-symbols-outlined align-bottom px-2"> rocket_launch </span>
-      <span class="material-symbols-outlined align-bottom px-2"> school </span>
+      <h5>Achieved</h5>
+    <% if (locals.seasonalResults) { %>
+      <% for(let i = 0; i < locals.seasonalResults.length; i++) { %>
+          <!-- ACHIEVEMENTS/BADGES -->
+            <% if (locals.seasonalResults[i].achievements) { %>
+                <% locals.seasonalResults[i].achievements.forEach((achievement) => { %>
+                    <span class="material-symbols-outlined align-bottom pr-2"><%= achievement %></span>
+                <% }); %>
+            <% } else { %> 
+                <p>No achievements earned.</p>
+            <% } %>    
+      <% } %>
+    <% } else { %>
+      <p>No results found.</p>
+    <% } %>
     </div>
   </div>
-  <!-- Row 3: Achievements -->
+  <!-- Available -->
   <div class="row py-2 mt-3" id="badge-display">
     <div class="col my-auto"><%- include('achievementList.ejs'); %></div>
   </div>
