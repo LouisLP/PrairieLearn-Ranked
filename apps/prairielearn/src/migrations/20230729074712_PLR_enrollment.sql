@@ -16,11 +16,9 @@ FROM
 CREATE OR REPLACE FUNCTION set_plr_enrollment()
 RETURNS TRIGGER AS $$
 BEGIN
-
-        INSERT INTO PLR_enrollment (user_id, course_instance_id)
-        VALUES (NEW.user_id, NEW.course_instance_id);
+    INSERT INTO PLR_enrollment (user_id, course_instance_id)
+        VALUES (NEW.user_id, NEW.course_instance_id)
         ON CONFLICT (user_id, course_instance_id) DO NOTHING;
-
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
