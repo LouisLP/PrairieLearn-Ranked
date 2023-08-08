@@ -1,0 +1,21 @@
+{
+    "description": "Update the duration of a users PLR_live_session_credential.",
+    "params": [
+     {
+       "name": "user_id",
+       "description": "Choose user_id",
+       "default": "1"
+     },
+     {
+       "name": "duration",
+       "description": "Choose a duration in the format \"HH:MM:SS\"",
+       "default": "00:00:00"
+     },
+     {
+       "name": "session_id",
+       "description": "Choose the assessment session id for your associate live scoreboard",
+       "default": "1"
+     }
+    ]
+  }
+  

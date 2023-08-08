@@ -23,16 +23,29 @@
         <% if (locals.allTimeResults) { %>
           <% for(let i = 0; i < locals.allTimeResults.length; i++) { %>
             <tr>
+              <!-- RANK -->
               <th scope="row"><%= i + 1 %></th>
+              <!-- DISPLAY NAME -->
               <td><%= locals.allTimeResults[i].display_name %></td>
-              <td>Add Badges...</td>
+              <!-- ACHIEVEMENTS/BADGES -->
+              <td>
+                <% if (locals.seasonalResults[i].achievements) { %>
+                  <% locals.seasonalResults[i].achievements.forEach((achievement) => { %>
+                      <span class="material-symbols-outlined align-bottom"><%= achievement %></span>
+                  <% }); %>
+              <% } else { %> 
+                  <p>No badges earned.</p>
+              <% } %> 
+              </td>         
+              <!-- TOTAL SCORE -->   
               <td><%= locals.allTimeResults[i].points %></td>
+              <!-- YEAR -->
               <td><%= (new Date(locals.allTimeResults[i].created_at)).getFullYear() %></td>
             </tr>
           <% } %>
         <% } else { %>
           <tr>
-            <td colspan="4">No results found.</td>
+            <td colspan="5">No results found.</td>
           </tr>
         <% } %>
       </tbody>

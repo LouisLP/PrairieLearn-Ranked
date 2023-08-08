@@ -22,9 +22,21 @@
         <% if (locals.seasonalResults) { %>
           <% for(let i = 0; i < locals.seasonalResults.length; i++) { %>
             <tr>
+              <!-- RANK -->
               <th scope="row"><%= i + 1 %></th>
+              <!-- DISPLAY NAME -->
               <td><%= locals.seasonalResults[i].display_name %></td>
-              <td>Add Badges...</td>
+              <!-- ACHIEVEMENTS/BADGES -->
+              <td>
+                <% if (locals.seasonalResults[i].achievements) { %>
+                    <% locals.seasonalResults[i].achievements.forEach((achievement) => { %>
+                        <span class="material-symbols-outlined align-bottom"><%= achievement %></span>
+                    <% }); %>
+                <% } else { %> 
+                    <p>No badges earned.</p>
+                <% } %>                           
+              </td>         
+              <!-- TOTAL SCORE -->   
               <td><%= locals.seasonalResults[i].points %></td>
             </tr>
           <% } %>

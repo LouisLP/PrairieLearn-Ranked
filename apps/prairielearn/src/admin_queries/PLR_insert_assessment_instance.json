@@ -1,0 +1,21 @@
+{
+   "description": "Insert the assessment_instance of a user.",
+   "params": [
+    {
+      "name": "user_id",
+      "description": "Choose user_id",
+      "default": "1"
+    },
+    {
+      "name": "points",
+      "description": "Choose point value",
+      "default": "0"
+    },
+    {
+      "name": "assessment_id",
+      "description": "Choose the assessment (22 Should be the assessment ID of our test assessment",
+      "default": "22"
+    }
+   ]
+ }
+ 

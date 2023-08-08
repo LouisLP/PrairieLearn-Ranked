@@ -1,0 +1,10 @@
+{
+    "description": "This query adds times to the PLR_live_session_credentials table ranging from 3-12 minutes for each user. With the exception of Babayegor who gets a time of 2 to test the speed demon and gotta go fast achievements.",
+    "params": [
+        {
+          "name": "assessment_id",
+          "description": "These should go through 100-104 to match the assessments generated in PLR_1_start_sessions.",
+          "default": "100"
+        }
+       ]
+}
