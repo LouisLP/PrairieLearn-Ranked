@@ -57,7 +57,7 @@ function cleanLargePages(url, page) {
  * @returns {Promise<import('jsdom').JSDOM>}
  */
 async function loadPageJsdom(url) {
-  console.log(url);
+  console.debug("SCOTT TEST" + url);
   const text = await fetch(url).then((res) => {
     if (!res.ok) {
       throw new Error(`Error loading page: ${res.status}`);
