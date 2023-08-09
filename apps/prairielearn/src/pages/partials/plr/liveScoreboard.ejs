@@ -1,7 +1,3 @@
-<head>
-  <%- compiled_stylesheet_tag('PLR.css') %>
-</head> 
-
 <div
   class="tab-pane fade text-white show active"
   id="nav-live-scoreboard"
@@ -116,6 +112,12 @@
         row.classList.add('bronze-rank');
       }
 
+      //check current user and highlight the cell if they aren't in the first 3 spots
+      if(score.display_name === '<%= locals.displayName %>' && index > 2)
+      {
+        row.classList.add('current-user-cell');
+      }
+      
       tableBody.appendChild(row);
     });
   }

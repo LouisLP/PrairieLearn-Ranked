@@ -138,6 +138,13 @@ li {
     background: radial-gradient(circle, #684421 20%, transparent 100%);
   }
 
+  /* Add white bg for current user */
+
+  .current-user-cell
+  {
+    background: rgb(119, 116, 116); 
+  }
+
 
 /* ============
    MEDIA QUERIES
