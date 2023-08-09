@@ -1,105 +1,37 @@
-<h5>Available Achievements</h5>
+<h5>Available</h5>
+<div class="" id="available-achievements"></div>
+
 <script>
   $(function () {
     $('[data-toggle="tooltip"]').tooltip();
   });
+
+  const achievements = [
+    { title: 'Gold: Rank 1 in a live quiz', icon: 'counter_1' },
+    { title: 'Silver: Rank 2 in a live quiz', icon: 'counter_2' },
+    { title: 'Bronze: Rank 3 in a live quiz', icon: 'counter_3' },
+    { title: 'Hat Trick: Rank 1, three live quizzes in a row', icon: 'school' },
+    { title: 'Unstoppable: Rank 1, five live quizzes in a row', icon: 'person_celebrate' },
+    { title: 'Gotta Go Fast: Fastest finish in a live quiz', icon: 'rocket_launch' },
+    { title: 'Speed Demon: Top 5 fastest times, five live quizzes in a row', icon: 'sprint' },
+    { title: 'Always On Time: Attended every live quiz', icon: 'emoji_people' },
+  ];
+
+  function createAchievementButton(title, icon) {
+    return `
+      <button
+        type="button"
+        class="btn btn-secondary mt-1"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="${title}"
+      >
+        <span class="material-symbols-outlined align-bottom px-2">${icon}</span>
+      </button>
+    `;
+  }
+
+  achievements.forEach(({ title, icon }) => {
+    $('#available-achievements').append(createAchievementButton(title, icon));
+  });
 </script>
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Fastest to submit a quiz"
->
-  <span class="material-symbols-outlined align-bottom px-2">rocket_launch</span>
-</button>
-
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Slowest to submit a quiz"
->
-  <span class="material-symbols-outlined align-bottom px-2">elderly</span>
-</button>
-
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Best score in the semester"
->
-  <span class="material-symbols-outlined align-bottom px-2">self_improvement</span>
-</button>
-
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Worst score in the semester"
->
-  <span class="material-symbols-outlined align-bottom px-2">heart_broken</span>
-</button>
-
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Top 3 result in a quiz"
->
-  <span class="material-symbols-outlined align-bottom px-2">workspace_premium</span>
-</button>
-
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Highest score with the slowest submission time"
->
-  <span class="material-symbols-outlined align-bottom px-2">psychology</span>
-</button>
-
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Three first place finishes in a row"
->
-  <span class="material-symbols-outlined align-bottom px-2">school</span>
-</button>
-
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Attended every quiz to date"
->
-  <span class="material-symbols-outlined align-bottom px-2">emoji_people</span>
-</button>
-
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="Exactly half the maximum score"
->
-  <span class="material-symbols-outlined align-bottom px-2">cookie</span>
-</button>
-
-<button
-  type="button"
-  class="btn btn-secondary mt-1"
-  data-toggle="tooltip"
-  data-placement="top"
-  title="The best of the best"
->
-  <span class="material-symbols-outlined align-bottom px-2">hotel_class</span>
-</button>
