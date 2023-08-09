@@ -5,7 +5,7 @@
   aria-labelledby="nav-live-scoreboard-tab"
 >
   <div id="live-scoreboard" class="table-responsive">
-    <table class="table table-dark">
+    <table class="table table-dark table-hover">
       <thead>
         <tr>
           <th scope="col">Rank</th>
@@ -102,6 +102,22 @@
       row.appendChild(achievementCell);
       row.appendChild(scoreCell);
       row.appendChild(timeCell);
+
+       // Add CSS classes to highlight the top three ranks with gold, silver, and bronze borders
+       if (index === 0) {
+        row.classList.add('gold-rank');
+      } else if (index === 1) {
+        row.classList.add('silver-rank');
+      } else if (index === 2) {
+        row.classList.add('bronze-rank');
+      }
+
+      //check current user and highlight the cell if they aren't in the first 3 spots
+      if(score.display_name === '<%= locals.displayName %>' && index > 2)
+      {
+        row.classList.add('current-user-cell');
+      }
+      
       tableBody.appendChild(row);
     });
   }

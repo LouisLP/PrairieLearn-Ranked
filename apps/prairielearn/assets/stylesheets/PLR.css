@@ -121,6 +121,31 @@ li {
   }
 }
 
+
+/* LIVE SCOREBOARD */
+
+.gold-rank {
+    background: radial-gradient(circle, rgb(185, 168, 71) 20%, transparent 100%);
+  }
+
+  /* Color gradient for silver rank */
+  .silver-rank {
+    background: radial-gradient(circle, rgb(134, 128, 128) 20%, transparent 100%);
+  }
+
+  /* Color gradient for bronze rank */
+  .bronze-rank {
+    background: radial-gradient(circle, #684421 20%, transparent 100%);
+  }
+
+  /* Add white bg for current user */
+
+  .current-user-cell
+  {
+    background: rgb(119, 116, 116); 
+  }
+
+
 /* ============
    MEDIA QUERIES
    ============ */
