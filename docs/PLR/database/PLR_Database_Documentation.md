@@ -1,3 +1,13 @@
+### Table of Contents
+
+- [DB Schema/Table Description](#db-schema/table-description)
+  - [Staff View Select Assessments](#staff-view-select-assessments)
+  - [ER Diagram](#er-diagram)
+- [Tables](#tables)
+- [Triggers and Functions](#triggers-and-functions)
+
+---
+
 # DB Schema/Table Description
 
 PrairieLearn's database uses a **migration** system. This means that each addition to the database needs to be in a small segmented SQL file. Our migrations are isolated [here](./migrations) as well as in PrairieLearn-Ranked's migration folder. A more in depth explation can be found in the [PL migration `README`](https://github.com/PrairieLearn/PrairieLearn/blob/master/apps/prairielearn/src/migrations/README.md) file.
