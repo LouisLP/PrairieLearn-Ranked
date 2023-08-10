@@ -11,7 +11,7 @@ BEGIN
     --If they have, we update their score and duration.
     UPDATE PLR_live_session_credentials
     SET
-      points = NEW.points * 3628,
+      points = NEW.points * 1000,
       duration = NOW() - PLR_live_session_credentials.assessment_start_time
     WHERE
       PLR_live_session_credentials.assessment_instance_id = NEW.id;
@@ -25,7 +25,7 @@ BEGIN
     -- If it does, we insert a new row into the live session credentials table.
     INSERT INTO PLR_live_session_credentials (points, session_id, assessment_start_time, user_id, assessment_instance_id)
     SELECT
-      NEW.points * 3628,
+      NEW.points * 1000,
       PLR_live_session.id,
       NOW(),
       NEW.user_id,
