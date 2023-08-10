@@ -22,7 +22,7 @@ The folders need the following {timestamp}\_{create name} format as described in
 
 ## Staff View Select Assessments
 
-Note: this will require courseInstanceId to be passed as an arg
+> NOTE: this will require courseInstanceId to be passed as an argument
 
 ```sql
     SELECT
