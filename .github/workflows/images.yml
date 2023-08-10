@@ -41,8 +41,8 @@ jobs:
           tags: prairielearn/plbase:latest
 
       ######################################################################################################
-      # prairielearn
-      - name: Build and push prairielearn/prairielearn
+      # PLR
+      - name: Build and push PLR
         uses: docker/build-push-action@v4 # https://github.com/marketplace/actions/build-and-push-docker-images
         with:
           context: .
@@ -53,7 +53,7 @@ jobs:
           platforms: linux/amd64
           push: true
           no-cache: true
-          tags: prairielearn/prairielearn:latest,prairielearn/prairielearn:${{ github.sha }}
+          tags: trustyturkey/plr:latest,trustyturkey/plr:${{ github.sha }}
 
       ######################################################################################################
       # grader-c
