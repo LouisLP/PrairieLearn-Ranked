@@ -41,7 +41,7 @@ jobs:
           tags: prairielearn/plbase:latest
 
       ######################################################################################################
-      # prairielearn
+      # PLR
       - name: Build and push PLR
         uses: docker/build-push-action@v4 # https://github.com/marketplace/actions/build-and-push-docker-images
         with:
