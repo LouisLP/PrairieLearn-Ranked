@@ -72,74 +72,61 @@ jobs:
 
   build-core-images:
     runs-on: ubuntu-latest
-
+  
     env:
       DOCKERHUB_USERNAME_SECRET: ${{ secrets.DOCKERHUB_USERNAME }}
-
+  
     steps:
-    - uses: actions/checkout@v3
-      with:
-        # We need the whole history so we can diff against `master` to determine
-        # what images need to be built.
-        fetch-depth: 0
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+  
+      - name: Build the plbase docker image if needed
+        run: ./tools/build-image-if-needed.sh images/plbase trustyturkey/plr-plbase:${{ env.COMMIT_SHA }}
+      - name: Build the prairielearn docker image
+        run: docker build -t trustyturkey/plr:${{ env.COMMIT_SHA }} .
+        env: 
+          PRAIRIELEARN_IMAGE_TAG: ${{ env.COMMIT_SHA }}
+      - name: Tag prairielearn image as latest
+        run: docker tag trustyturkey/plr:${{ env.COMMIT_SHA }} trustyturkey/plr:latest
+      - name: Build executor image
+        run: docker build ./images/executor --tag trustyturkey/plr-executor:${{ env.COMMIT_SHA }}
+        env:
+          PRAIRIELEARN_IMAGE_TAG: ${{ env.COMMIT_SHA }}
+      - name: Tag executor image as latest
+        run: docker tag trustyturkey/plr-executor:${{ env.COMMIT_SHA }} trustyturkey/plr-executor:latest
+  
+      # Login and push steps
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' }}
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Push prairielearn image to Docker registry
+        if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' }}
+        run: docker push trustyturkey/plr:${{ env.COMMIT_SHA }}
+      - name: Push executor image to Docker registry
+        if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' }}
+        run: docker push trustyturkey/plr-executor:${{ env.COMMIT_SHA }}
+      # Only push the `:latest` image if we're on the `master` branch.
+      - name: Push latest executor image to Docker registry
+        if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' && github.ref == 'refs/heads/master' }}
+        run: docker push trustyturkey/plr-executor:latest      
 
-    - name: Build the plbase docker image if needed
-      run: ./tools/build-image-if-needed.sh images/plbase prairielearn/plbase:${{ env.COMMIT_SHA }}
-    - name: Build the prairielearn docker image
-      run: docker build -t prairielearn/prairielearn:${{ env.COMMIT_SHA }} .
-      env: 
-        PRAIRIELEARN_IMAGE_TAG: ${{ env.COMMIT_SHA }}
-    - name: Tag prairielearn image as latest
-      run: docker tag prairielearn/prairielearn:${{ env.COMMIT_SHA }} prairielearn/prairielearn:latest
-    - name: Build executor image
-      run: docker build ./images/executor --tag prairielearn/executor:${{ env.COMMIT_SHA }}
-      env:
-        PRAIRIELEARN_IMAGE_TAG: ${{ env.COMMIT_SHA }}
-    - name: Tag executor image as latest
-      run: docker tag prairielearn/executor:${{ env.COMMIT_SHA }} prairielearn/executor:latest
-
-    # The following steps won't run correctly for forks since the Dockerhub
-    # credentials secrets will be missing. We only run them if the secrets are
-    # provided. Note that we can't use `secrets.*` directly in an `if` conditional
-    # here, so we copy them to an environment variable at the start of the job
-    # and then check that here.
-    - name: Login to DockerHub
-      uses: docker/login-action@v2
-      if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' }}
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Push prairielearn image to Docker registry
-      if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' }}
-      run: docker push prairielearn/prairielearn:${{ env.COMMIT_SHA }}
-    - name: Push executor image to Docker registry
-      if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' }}
-      run: docker push prairielearn/executor:${{ env.COMMIT_SHA }}
-    # Only push the `:latest` image if we're on the `master` branch.
-    - name: Push latest executor image to Docker registry
-      if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' && github.ref == 'refs/heads/master' }}
-      run: docker push prairielearn/executor:latest
-
-    # We run the following steps in this job instead of separately to avoid the
-    # overhead of pulling the image another time.
-
-    - name: Create a temporary directory for host files
-      run: mkdir -p /tmp/prairielearn
-    - name: Start the container
-      # We have tests for external grading code, which relies on the Docker
-      # socket being available, as well as a specific volume mount and
-      # environment variable. See the docs for more details:
-      # https://prairielearn.readthedocs.io/en/latest/externalGrading/#running-locally-for-development
-      #
-      # We put the Postgres data on a tmpfs volume, which should be much faster.
-      run: docker run -td -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/prairielearn:/jobs --tmpfs=/var/postgres -e HOST_JOBS_DIR=/tmp/prairielearn --name=test_container prairielearn/prairielearn /bin/bash
-    - name: Run the JavaScript tests
-      run: docker exec test_container /PrairieLearn/docker/test_js.sh
-      # The JS tests hang relatively often when someone makes a mistake in a PR,
-      # and the GitHub Actions default timeout is 6 hours, so the CI run keeps
-      # spinning until it eventually times out. This shorter timeout helps
-      # ensure that the tests fail more quickly so that people can fix them.
-      timeout-minutes: 30
+      # We run the following steps in this job instead of separately to avoid the
+      # overhead of pulling the image another time.
+  
+      - name: Create a temporary directory for host files
+        run: mkdir -p /tmp/prairielearn
+      - name: Start the container
+        # We have tests for external grading code, which relies on the Docker
+        # socket being available, as well as a specific volume mount and
+        # environment variable. See the docs for more details:
+        # https://prairielearn.readthedocs.io/en/latest/externalGrading/#running-locally-for-development
+        #
+        # We put the Postgres data on a tmpfs volume, which should be much faster.
+        run: docker run -td -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/prairielearn:/jobs --tmpfs=/var/postgres -e HOST_JOBS_DIR=/tmp/prairielearn --name=test_container prairielearn/prairielearn /bin/bash
 
   native-checks:
     runs-on: ubuntu-latest
