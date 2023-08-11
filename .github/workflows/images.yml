@@ -53,7 +53,7 @@ jobs:
           platforms: linux/amd64
           push: true
           no-cache: true
-          tags: trustyturkey/plr:latest,trustyturkey/plr:${{ github.sha }}
+          tags: drlawrenc/plr:latest,drlawrenc/plr:${{ github.sha }}
 
       ######################################################################################################
       # grader-c

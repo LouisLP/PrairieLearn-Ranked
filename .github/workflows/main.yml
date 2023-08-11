@@ -82,19 +82,19 @@ jobs:
           fetch-depth: 0
   
       - name: Build the plbase docker image if needed
-        run: ./tools/build-image-if-needed.sh images/plbase trustyturkey/plr-plbase:${{ env.COMMIT_SHA }}
+        run: ./tools/build-image-if-needed.sh images/plbase drlawrenc/plr-plbase:${{ env.COMMIT_SHA }}
       - name: Build the prairielearn docker image
-        run: docker build -t trustyturkey/plr:${{ env.COMMIT_SHA }} .
+        run: docker build -t drlawrenc/plr:${{ env.COMMIT_SHA }} .
         env: 
           PRAIRIELEARN_IMAGE_TAG: ${{ env.COMMIT_SHA }}
       - name: Tag prairielearn image as latest
-        run: docker tag trustyturkey/plr:${{ env.COMMIT_SHA }} trustyturkey/plr:latest
+        run: docker tag drlawrenc/plr:${{ env.COMMIT_SHA }} drlawrenc/plr:latest
       - name: Build executor image
-        run: docker build ./images/executor --tag trustyturkey/plr-executor:${{ env.COMMIT_SHA }}
+        run: docker build ./images/executor --tag drlawrenc/plr-executor:${{ env.COMMIT_SHA }}
         env:
           PRAIRIELEARN_IMAGE_TAG: ${{ env.COMMIT_SHA }}
       - name: Tag executor image as latest
-        run: docker tag trustyturkey/plr-executor:${{ env.COMMIT_SHA }} trustyturkey/plr-executor:latest
+        run: docker tag drlawrenc/plr-executor:${{ env.COMMIT_SHA }} drlawrenc/plr-executor:latest
   
       # Login and push steps
       - name: Login to DockerHub
@@ -105,14 +105,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Push prairielearn image to Docker registry
         if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' }}
-        run: docker push trustyturkey/plr:${{ env.COMMIT_SHA }}
+        run: docker push drlawrenc/plr:${{ env.COMMIT_SHA }}
       - name: Push executor image to Docker registry
         if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' }}
-        run: docker push trustyturkey/plr-executor:${{ env.COMMIT_SHA }}
+        run: docker push drlawrenc/plr-executor:${{ env.COMMIT_SHA }}
       # Only push the `:latest` image if we're on the `master` branch.
       - name: Push latest executor image to Docker registry
         if: ${{ env.DOCKERHUB_USERNAME_SECRET != '' && github.ref == 'refs/heads/master' }}
-        run: docker push trustyturkey/plr-executor:latest      
+        run: docker push drlawrenc/plr-executor:latest      
 
       # We run the following steps in this job instead of separately to avoid the
       # overhead of pulling the image another time.
