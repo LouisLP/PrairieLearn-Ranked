@@ -49,18 +49,3 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER insert_aot_achievement_trigger
 AFTER INSERT ON plr_students FOR EACH ROW
 EXECUTE FUNCTION insert_aot_achievement ();
-
--- This insert will grab every student in the DB when the table is made.
--- This is located here to ensure that the AoT trigger is live before moving over all users.
-INSERT INTO PLR_students (user_id, display_name)
-SELECT 
-    user_id, name
-FROM
-    users
-WHERE
-    user_id NOT IN (
-        SELECT
-            user_id
-        FROM
-            job_sequences
-    );
