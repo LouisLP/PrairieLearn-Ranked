@@ -33,7 +33,7 @@
                 <% } %>                           
               </td>         
               <!-- TOTAL SCORE -->   
-              <td><%= locals.seasonalResults[i].points %></td>
+              <td><%= locals.seasonalResults[i].points.toLocaleString("en-US") %></td>
             </tr>
           <% } %>
         <% } else { %>
