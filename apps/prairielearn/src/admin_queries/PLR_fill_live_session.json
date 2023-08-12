@@ -1,0 +1,15 @@
+{
+    "description": "This query fills a table for an open live session",
+    "params": [
+        {
+            "name": "course_instance_id",
+            "description": "This should match the course instance id for the course you wish to simulate. This might need to be grabbed from the bash.",
+            "default": "1"
+        },
+        {
+          "name": "assessment_id",
+          "description": "This should match the assessment id for the assessment you wish to simulate. This might need to be grabbed from the bash.",
+          "default": "1"
+        }
+       ]
+  }
