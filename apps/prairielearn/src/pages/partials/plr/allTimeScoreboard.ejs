@@ -34,7 +34,7 @@
               <% } %> 
               </td>         
               <!-- TOTAL SCORE -->   
-              <td><%= locals.allTimeResults[i].points %></td>
+              <td><%= locals.allTimeResults[i].points.toLocaleString("en-US") %></td>
               <!-- YEAR -->
               <td><%= (new Date(locals.allTimeResults[i].created_at)).getFullYear() %></td>
             </tr>
