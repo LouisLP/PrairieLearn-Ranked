@@ -7,7 +7,8 @@ SELECT
       FROM PLR_achievements
       JOIN PLR_has_achieved ON PLR_achievements.id = PLR_has_achieved.achievement_id
       WHERE PLR_has_achieved.user_id = PLR_students.user_id
-   ) AS achievements
+   ) AS achievements,
+   PLR_students.user_id AS user_id
 FROM
    PLR_seasonal_session_CREDENTIALS
    JOIN PLR_students USING (user_id)
