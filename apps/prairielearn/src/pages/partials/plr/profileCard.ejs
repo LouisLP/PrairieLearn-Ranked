@@ -29,16 +29,23 @@
     <div class="col my-auto">
       <h5>Achieved</h5>
     <% if (locals.seasonalResults) { %>
+      <% var foundFlag = false; %>
       <% for(let i = 0; i < locals.seasonalResults.length; i++) { %>
           <!-- ACHIEVEMENTS/BADGES -->
-            <% if (locals.seasonalResults[i].achievements) { %>
+            <% if (locals.seasonalResults[i].achievements && locals.seasonalResults[i].user_id == locals.userId) { %>
+              <script>
+                console.log('SanityCheck1');
+                console.log(<%- JSON.stringify(locals.seasonalResults[i].achievements && locals.seasonalResults[i].user_id == locals.userId)%>)
+              </script>
                 <% locals.seasonalResults[i].achievements.forEach((achievement) => { %>
                     <span class="material-symbols-outlined align-bottom pr-2"><%= achievement %></span>
                 <% }); %>
-            <% } else { %> 
-                <p>No achievements earned.</p>
-            <% } %>    
-      <% } %>
+                <% foundFlag = true; %>
+            <% } %>
+          <% } %>
+          <% if (!foundFlag){%>
+            <p>No achievements earned</p>
+          <% } %>
     <% } else { %>
       <p>No results found.</p>
     <% } %>
