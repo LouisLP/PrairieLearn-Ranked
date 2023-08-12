@@ -4,14 +4,6 @@ CREATE TABLE IF NOT EXISTS PLR_enrollment (
     course_instance_id VARCHAR(256) NOT NULL,
     PRIMARY KEY (user_id, course_instance_id)
 );
-
--- This insert will grab every student's enrollment in the DB when the table is made.
-INSERT INTO PLR_enrollment (user_id, course_instance_id)
-SELECT 
-    user_id, course_instance_id
-FROM
-    enrollments;
-
 -- This trigger will insert a new row into PLR_enrollment when a new row is inserted into enrollments.
 CREATE OR REPLACE FUNCTION set_plr_enrollment()
 RETURNS TRIGGER AS $$
