@@ -1,7 +1,3 @@
-INSERT INTO users (user_id, uid, name)
-VALUES (2, 'test', 'Test User');
-
-
 -- This table represents our students.
 -- Total score represents all the points a student has ever gotten.
 CREATE TABLE IF NOT EXISTS PLR_students (

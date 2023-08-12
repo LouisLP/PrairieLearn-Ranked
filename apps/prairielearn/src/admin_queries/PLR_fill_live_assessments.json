@@ -1,0 +1,10 @@
+{
+    "description": "This query adds assessments for users 2-15",
+    "params": [
+        {
+            "name": "assessment_id",
+            "description": "Insert the assessment id. This might need to be grabbed from the bash psql environment.",
+            "default": "1"
+        }
+       ]
+  }

@@ -1,0 +1,10 @@
+{
+    "description": "This query adds users 2-15",
+    "params": [
+        {
+            "name": "course_instance_id",
+            "description": "Insert the course instance id. This might need to be grabbed from the bash psql environment.",
+            "default": "1"
+        }
+       ]
+  }
