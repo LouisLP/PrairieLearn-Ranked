@@ -4,20 +4,20 @@ WITH
     INSERT INTO
       users (user_id, uid, name)
     VALUES
-      (2, 'fazackernator@ubc.ca', 'Fazackernator'),
-      (3, 'big_ramon@ubc.ca', 'Big Ramon'),
-      (4, 'mouth_man@ubc.ca', 'Mouth of Sauron'),
-      (5, 'YesHoney@ubc.ca', 'Louis Dear'),
-      (6, 'TheYoungGoat@ubc.ca', 'Sheel The Goat'),
-      (7, 'ErenYegor@ubc.ca', 'Babayegor'),
-      (8, 'IAmBecomePL@ubc.ca', 'PL God'),
-      (9, 'LordAndSaviour@ubc.ca', 'The Almighty Nathan'),
-      (10, 'TheReverseFlash@ubc.ca', 'Eobard Thawne'),
-      (11, 'GottaGetThatMoney@ubc.ca', 'Eugene Krabs'),
-      (12, 'CodeineGotMeTripping@ubc.ca', 'Don Spongiver'),
-      (13, 'IAmKenough@ubc.ca', 'Ken'),
-      (14, 'UncleBenis#Dead@ubc.ca', 'Miles Morales'),
-      (15, 'LostMyMoney@ubc.ca', 'G@mb71ng @dd1<t')
+      (15, 'fazackernator@ubc.ca', 'Fazackernator'),
+      (14, 'big_ramon@ubc.ca', 'Big Ramon'),
+      (13, 'mouth_man@ubc.ca', 'Mouth of Sauron'),
+      (12, 'YesHoney@ubc.ca', 'Louis Dear'),
+      (11, 'TheYoungGoat@ubc.ca', 'Sheel The Goat'),
+      (10, 'ErenYegor@ubc.ca', 'Babayegor'),
+      (9, 'IAmBecomePL@ubc.ca', 'PL God'),
+      (8, 'LordAndSaviour@ubc.ca', 'The Almighty Nathan'),
+      (7, 'TheReverseFlash@ubc.ca', 'Eobard Thawne'),
+      (6, 'GottaGetThatMoney@ubc.ca', 'Eugene Krabs'),
+      (5, 'CodeineGotMeTripping@ubc.ca', 'Don Spongiver'),
+      (4, 'IAmKenough@ubc.ca', 'Ken'),
+      (3, 'UncleBenis#Dead@ubc.ca', 'Miles Morales'),
+      (2, 'LostMyMoney@ubc.ca', 'G@mb71ng @dd1<t')
   ),
   enrolls AS (
     INSERT INTO
