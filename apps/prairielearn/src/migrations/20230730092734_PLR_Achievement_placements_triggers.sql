@@ -1,11 +1,27 @@
 -- This trigger updates our achievements table with gold, silver, and bronze for the top 3 students in a live session
 CREATE
 OR REPLACE FUNCTION assign_medals () RETURNS TRIGGER AS $$
-DECLARE
+DECLARE    
     -- Here we select the top 3 students in a live session
+    --winners CURSOR FOR 
+    --SELECT user_id, rank 
+    --FROM PLR_live_session_credentials 
+    --WHERE session_id = NEW.id 
+    --ORDER BY rank ASC 
+    --LIMIT 3;
+
     winners CURSOR FOR 
     SELECT user_id, rank 
-    FROM PLR_live_session_credentials 
+    FROM (
+     SELECT
+       id,
+       session_id,
+       user_id,
+       RANK() OVER (PARTITION BY session_id ORDER BY points DESC, duration ASC) AS rank
+     FROM
+       PLR_live_session_credentials
+     WHERE session_id = NEW.id 
+    ) as rankedTable
     WHERE session_id = NEW.id 
     ORDER BY rank ASC 
     LIMIT 3;

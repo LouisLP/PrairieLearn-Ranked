@@ -38,20 +38,23 @@ BEGIN
   END IF;
 
   -- This query updates the rank of each student in the live session.
-  WITH RankedTable AS (
-    SELECT
-      id,
-      session_id,
-      user_id,
-      RANK() OVER (PARTITION BY session_id ORDER BY points DESC, duration ASC) AS new_rank
-    FROM
-      PLR_live_session_credentials
-  )
+  -- RL UPDATE: Updating the rank has been removed as it results in deadlock due to
+  -- reading the entire PLR_live_session_credentials table then updating the rows
+  -- Deadlock can occur when two separate users (trigger invocations) cause the read and write to happen concurrently
+  -- WITH RankedTable AS (
+  --   SELECT
+  --     id,
+  --     session_id,
+  --     user_id,
+  --     RANK() OVER (PARTITION BY session_id ORDER BY points DESC, duration ASC) AS new_rank
+  --   FROM
+  --     PLR_live_session_credentials
+  -- )
   -- This sets the rank of each student in the live session to the rank in the RankedTable.
-  UPDATE PLR_live_session_credentials AS target
-  SET rank = subquery.new_rank
-  FROM RankedTable AS subquery
-  WHERE target.id = subquery.id;
+  -- UPDATE PLR_live_session_credentials AS target
+  -- SET rank = subquery.new_rank
+  -- FROM RankedTable AS subquery
+  -- WHERE target.id = subquery.id;
 
   RETURN NEW;
 END;
