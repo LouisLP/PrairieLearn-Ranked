@@ -50,18 +50,18 @@ VALUES
   );
 
 -- This insert will grab every student in the DB when the table is made.
-INSERT INTO PLR_students (user_id, display_name)
-SELECT 
-    user_id, name
-FROM
-    users
-WHERE
-    user_id NOT IN (
-        SELECT
-            user_id
-        FROM
-            job_sequences
-    );
+-- INSERT INTO PLR_students (user_id, display_name)
+-- SELECT 
+--     user_id, name
+-- FROM
+--     users
+-- WHERE
+--     user_id NOT IN (
+--         SELECT
+--             user_id
+--         FROM
+--             job_sequences
+--     );
 
 -- This insert will grab every student's enrollment in the DB when the table is made.
 INSERT INTO PLR_enrollment (user_id, course_instance_id)
