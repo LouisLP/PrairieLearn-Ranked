@@ -50,7 +50,7 @@ VALUES
   );
 
 -- This insert will grab every student in the DB when the table is made.
--- INSERT INTO PLR_students (user_id, display_name)
+--- INSERT INTO PLR_students (user_id, display_name)
 -- SELECT 
 --     user_id, name
 -- FROM
