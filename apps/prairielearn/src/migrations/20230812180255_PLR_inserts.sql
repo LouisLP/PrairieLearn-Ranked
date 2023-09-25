@@ -64,8 +64,8 @@ VALUES
 --     );
 
 -- This insert will grab every student's enrollment in the DB when the table is made.
-INSERT INTO PLR_enrollment (user_id, course_instance_id)
-SELECT 
-    user_id, course_instance_id
-FROM
-    enrollments;
+-- INSERT INTO PLR_enrollment (user_id, course_instance_id)
+-- SELECT 
+--     user_id, course_instance_id
+-- FROM
+--     enrollments;
