@@ -86,7 +86,7 @@ class CodeCallerNative {
   constructor(
     options = {
       dropPrivileges: false,
-      questionTimeoutMilliseconds: 5_000,
+      questionTimeoutMilliseconds: 10_000,
       pingTimeoutMilliseconds: 60_000,
       // `CodeCallerNative` is used both directly by the server and also inside of
       // the `prairielearn/executor` Docker image. When used inside Docker, the

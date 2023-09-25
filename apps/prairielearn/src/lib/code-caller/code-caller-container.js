@@ -113,7 +113,7 @@ async function ensureImage() {
  * @implements {CodeCaller}
  */
 class CodeCallerContainer {
-  constructor(options = { questionTimeoutMilliseconds: 5_000, pingTimeoutMilliseconds: 60_000 }) {
+  constructor(options = { questionTimeoutMilliseconds: 10_000, pingTimeoutMilliseconds: 60_000 }) {
     /** @type {CallerState} */
     this.state = CREATED;
     this.uuid = uuidv4();
