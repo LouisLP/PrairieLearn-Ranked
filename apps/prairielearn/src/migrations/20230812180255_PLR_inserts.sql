@@ -1,5 +1,4 @@
 -- Moved all the inserts here to ensure that they are run after the tables are created.
-
 -- Insert our pre-made achievements into the achievements table
 INSERT INTO
   PLR_achievements (
@@ -50,22 +49,26 @@ VALUES
   );
 
 -- This insert will grab every student in the DB when the table is made.
---- INSERT INTO PLR_students (user_id, display_name)
--- SELECT 
---     user_id, name
--- FROM
---     users
--- WHERE
---     user_id NOT IN (
---         SELECT
---             user_id
---         FROM
---             job_sequences
---     );
+INSERT INTO PLR_students (user_id, display_name)
+SELECT 
+    user_id, name
+FROM
+    users
+WHERE
+    user_id NOT IN (
+        SELECT
+            user_id
+        FROM
+            job_sequences
+    )
+ON CONFLICT (user_id) DO NOTHING;
 
 -- This insert will grab every student's enrollment in the DB when the table is made.
--- INSERT INTO PLR_enrollment (user_id, course_instance_id)
--- SELECT 
---     user_id, course_instance_id
--- FROM
---     enrollments;
+INSERT INTO
+  PLR_enrollment (user_id, course_instance_id)
+SELECT
+  user_id,
+  course_instance_id
+FROM
+  enrollments
+ON CONFLICT (user_id, course_instance_id) DO NOTHING;
