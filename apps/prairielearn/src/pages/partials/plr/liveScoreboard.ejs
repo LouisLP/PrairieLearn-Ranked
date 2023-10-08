@@ -88,7 +88,7 @@
 
       // Set the content of each cell
       rankCell.setAttribute('scope', 'row');
-      rankCell.textContent = score.rank;
+      rankCell.textContent = index + 1;
       nameCell.textContent = score.display_name;
       scoreCell.textContent = Math.round(score.points).toLocaleString("en-US");
 
