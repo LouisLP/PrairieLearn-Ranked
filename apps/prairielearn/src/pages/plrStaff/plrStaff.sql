@@ -8,7 +8,9 @@ FROM
    JOIN assessment_sets ON assessments.assessment_set_id = assessment_sets.id
 WHERE
    assessment_sets.abbreviation = 'LV'
-   AND assessments.course_instance_id = $1;
+   AND assessments.course_instance_id = $1
+ORDER BY
+   assessments.title ASC;
 
 -- ENDBLOCK
 
