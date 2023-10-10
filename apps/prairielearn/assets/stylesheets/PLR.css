@@ -159,7 +159,7 @@ position it at the bottom and in the middle of the screen */
   position: fixed; /* Sit on top of the screen */
   z-index: 1; /* Add a z-index if needed */
   left: 50%; /* Center the toast */
-  top: 30px; /* 30px from the top */
+  top: 75px; /* 30px from the top */
 }
 
 /* Show the toast when clicking on a button (class added with JavaScript) */
@@ -173,21 +173,21 @@ position it at the bottom and in the middle of the screen */
 
 /* Animations to fade the toast in and out */
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {top: 0; opacity: 0;}
+  to {top: 75px; opacity: 1;}
 }
 
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 30px; opacity: 1;}
+  from {top: 0; opacity: 0;}
+  to {top: 75px; opacity: 1;}
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {top: 75px; opacity: 1;}
+  to {top: 0; opacity: 0;}
 }
 
 @keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {top: 75px; opacity: 1;}
+  to {top: 0; opacity: 0;}
 }
