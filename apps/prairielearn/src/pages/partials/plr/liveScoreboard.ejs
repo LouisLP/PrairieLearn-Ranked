@@ -99,8 +99,10 @@
     // Iterate through the scores and add them to the table
     scores.forEach((score, index) => {
       // Show the toast for the updated score
-      const message = `${score.display_name} reached ${score.points} points!`;
-      showToast(message);
+      if(score.points !== 0) {
+        const message = `${score.display_name} reached ${score.points} points!`;
+        showToast(message);
+      }
 
       // Create the row and cells on that row
       const row = document.createElement('tr');
