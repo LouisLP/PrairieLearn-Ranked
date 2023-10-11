@@ -1,10 +1,11 @@
-<div
-  class="tab-pane fade text-white show active"
-  id="nav-live-scoreboard"
-  role="tabpanel"
-  aria-labelledby="nav-live-scoreboard-tab"
->
+<!-- HTML Structure -->
+<!-- Div to place the toast message inside -->
+<div id="toast"></div>
+<!-- Start the scoreboard structure -->
+<div class="tab-pane fade text-white show active" id="nav-live-scoreboard" role="tabpanel"
+  aria-labelledby="nav-live-scoreboard-tab">
   <div id="live-scoreboard" class="table-responsive">
+    <!-- Table for the live results -->
     <table class="table table-dark table-hover">
       <thead>
         <tr>
@@ -21,49 +22,65 @@
     </table>
   </div>
 </div>
+<!-- JavaScript Code -->
 <script>
-  // Initial results from the server
-  results = <%- JSON.stringify(locals.liveResults) %>;
-  // Update the scoreboard with the initial results
-  updateScores(results);
-  // Grab the course instance id from the page
-  const courseInstanceId = '<%= course_instance.id %>';
-  // EventSource for live updates
-  const source = new EventSource(`/pl/course_instance/${courseInstanceId}/plrStudent/live_updates`);
+  // --------------
+  // Initialization
+  // --------------
+  window.addEventListener('load', initialize);
 
-  // Handle errors in the connection
-  source.addEventListener('error', function (e) {
+  function initialize() {
+    // Initial results from the server
+    results = <%- JSON.stringify(locals.liveResults) %>;
+    // Update the scoreboard with the initial results
+    updateScores(results);
+    // Setup EventSource for live updates
+    setupEventSource();
+  }
+
+  // ------------------
+  // Event Source Setup
+  // ------------------
+  function setupEventSource() {
+    const courseInstanceId = '<%= course_instance.id %>';
+    const source = new EventSource(`/pl/course_instance/${courseInstanceId}/plrStudent/live_updates`);
+
+    source.addEventListener('error', handleEventSourceError);
+    source.onmessage = logServerMessage;
+    source.addEventListener('scores', handleScoreUpdates, false);
+    source.addEventListener('connected', handleConnectedUsers, false);
+  }
+
+  // --------------
+  // Event Handlers
+  // --------------
+  function handleEventSourceError(e) {
     console.error('EventSource failed:', e);
-  });
-  // Log messages from the server
-  source.onmessage = function (event) {
+  }
+
+  function logServerMessage(event) {
     console.log('got a message from server!');
-  };
-  // Listen for updates to the scoreboard
-  source.addEventListener(
-    'scores',
-    function (event) {
-      try {
-        const data = JSON.parse(event.data);
-        console.log('Receiving data: ', data);
-        updateScores(data);
-      } catch (error) {
-        console.error('Error parsing JSON: ', error);
-      }
-    },
-    false,
-  );
-  // Listen for updates to the number of connected users
-  source.addEventListener(
-    'connected',
-    function (event) {
+  }
+
+  function handleScoreUpdates(event) {
+    try {
       const data = JSON.parse(event.data);
-      const currentUserElement = document.getElementById('current-user');
-      currentUserElement.textContent = `Connected users: ${data}`;
-    },
-    false,
-  );
-  // Function to update the live scoreboard
+      console.log('Receiving data: ', data);
+      updateScores(data);
+    } catch (error) {
+      console.error('Error parsing JSON: ', error);
+    }
+  }
+
+  function handleConnectedUsers(event) {
+    const data = JSON.parse(event.data);
+    const currentUserElement = document.getElementById('current-user');
+    currentUserElement.textContent = `Connected users: ${data}`;
+  }
+
+  // -------------------
+  // UI Update Functions
+  // -------------------
   function updateScores(scores) {
     // Get the table body
     const tableBody = document.querySelector('#live-results');
@@ -81,6 +98,13 @@
     }
     // Iterate through the scores and add them to the table
     scores.forEach((score, index) => {
+      // Show the toast for the updated score
+      if(score.points !== 0) {
+        const message = `${score.display_name} reached ${score.points} points!`;
+        showToast(message);
+      }
+
+      // Create the row and cells on that row
       const row = document.createElement('tr');
       const rankCell = document.createElement('th');
       const nameCell = document.createElement('td');
@@ -103,8 +127,8 @@
       row.appendChild(scoreCell);
       row.appendChild(timeCell);
 
-       // Add CSS classes to highlight the top three ranks with gold, silver, and bronze borders
-       if (index === 0) {
+      // Add CSS classes to highlight the top three ranks with gold, silver, and bronze borders
+      if (index === 0) {
         row.classList.add('gold-rank');
       } else if (index === 1) {
         row.classList.add('silver-rank');
@@ -113,32 +137,25 @@
       }
 
       //check current user and highlight the cell if they aren't in the first 3 spots
-      if(score.display_name === '<%= locals.displayName %>' && index > 2)
-      {
+      if (score.display_name === '<%= locals.displayName %>' && index > 2) {
         row.classList.add('current-user-cell');
       }
-      
+
       tableBody.appendChild(row);
     });
   }
 
-  // Handle closing the connection when the window is closed
-  window.addEventListener('beforeunload', function () {
-    var req = new XMLHttpRequest();
-
-    req.open('POST', '/sse/close', false);
-
-    var clientId = document.cookie.replace(/(?:(?:^|.*;\s*)clientId\s*=\s*([^;]*).*$)|^.*$/, '$1');
-
-    req.send(JSON.stringify({ id: clientId }));
-  });
-
-  // Filter out scores that are not for this course instance
-  function getCourseRelevant(results){
-    const realID = '<%= course_instance.id %>';
-    return results.filter((results) => results.course_instance_id != realID);
+  function showToast(message) {
+    // Get the toast DIV
+    var toast = document.getElementById("toast");
+    // Update the message
+    toast.textContent = message;
+    // Add the "show" class
+    toast.className = "show";
+    // After 3 seconds, make the toast go away
+    setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
   }
-  // Achievements are more complex to go through each one
+
   function createAchievementCell(achievements) {
     const achievementCell = document.createElement('td');
     if (achievements) {
@@ -155,7 +172,7 @@
     }
     return achievementCell;
   }
-  // Time is also more complex to format the time
+
   function createTimeCell(time) {
     const timeCell = document.createElement('td');
     var formattedTime = "00:00";
@@ -170,4 +187,20 @@
     timeCell.textContent = formattedTime;
     return timeCell;
   }
+
+  // -----------------
+  // Utility Functions
+  // -----------------
+  function getCourseRelevant(results) {
+    const realID = '<%= course_instance.id %>';
+    return results.filter((results) => results.course_instance_id != realID);
+  }
+
+  // Handle closing the connection when the window is closed
+  window.addEventListener('beforeunload', function () {
+    var req = new XMLHttpRequest();
+    req.open('POST', '/sse/close', false);
+    var clientId = document.cookie.replace(/(?:(?:^|.*;\s*)clientId\s*=\s*([^;]*).*$)|^.*$/, '$1');
+    req.send(JSON.stringify({ id: clientId }));
+  });
 </script>
