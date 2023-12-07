@@ -46,6 +46,7 @@ SELECT
    points,
    rank,
    duration,
+   PLR_live_session_credentials.id AS identifier,
    (
       SELECT ARRAY_AGG(PLR_achievements.icon_name)
       FROM PLR_achievements

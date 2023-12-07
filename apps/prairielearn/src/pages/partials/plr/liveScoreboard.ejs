@@ -81,13 +81,14 @@
   // -------------------
   // UI Update Functions
   // -------------------
+  // Track notified scores to prevent duplicate toast notifications
+  let notifiedScores = new Set();
+
   function updateScores(scores) {
-    // Get the table body
     const tableBody = document.querySelector('#live-results');
     tableBody.innerHTML = '';
-    // Filter out scores that are not for this course instance
     scores = getCourseRelevant(scores);
-    // Handle empty scores
+
     if (scores.length === 0) {
       const row = document.createElement('tr');
       const cell = document.createElement('td');
@@ -95,65 +96,47 @@
       cell.textContent = 'No live scores available.';
       row.appendChild(cell);
       tableBody.appendChild(row);
+      return;
     }
-    // Iterate through the scores and add them to the table
+
     scores.forEach((score, index) => {
-      // Show the toast for the updated score
-      if(score.points !== 0) {
+      // Give a unique identifier for each score
+      const scoreIdentifier = `${score.identifier}-${score.points}`;
+      // If a score has changed, notify the user with a toast, and add it to the notified scores set
+      if (score.points !== 0 && !notifiedScores.has(scoreIdentifier)) {
         const message = `${score.display_name} reached ${score.points} points!`;
         showToast(message);
+        notifiedScores.add(scoreIdentifier);
       }
 
-      // Create the row and cells on that row
       const row = document.createElement('tr');
-      const rankCell = document.createElement('th');
-      const nameCell = document.createElement('td');
-      const scoreCell = document.createElement('td');
+      row.appendChild(createCell('th', index + 1, 'row')); // Rank
+      row.appendChild(createCell('td', score.display_name)); // Name
+      row.appendChild(createAchievementCell(score.achievements)); // Achievements
+      row.appendChild(createCell('td', Math.round(score.points).toLocaleString("en-US"))); // Score
+      row.appendChild(createTimeCell(score.duration)); // Time
 
-      // Set the content of each cell
-      rankCell.setAttribute('scope', 'row');
-      rankCell.textContent = index + 1;
-      nameCell.textContent = score.display_name;
-      scoreCell.textContent = Math.round(score.points).toLocaleString("en-US");
-
-      // Create achievement and time cells (done in functions)
-      const achievementCell = createAchievementCell(score.achievements);
-      const timeCell = createTimeCell(score.duration);
-
-      // Add the cells to the row
-      row.appendChild(rankCell);
-      row.appendChild(nameCell);
-      row.appendChild(achievementCell);
-      row.appendChild(scoreCell);
-      row.appendChild(timeCell);
-
-      // Add CSS classes to highlight the top three ranks with gold, silver, and bronze borders
-      if (index === 0) {
-        row.classList.add('gold-rank');
-      } else if (index === 1) {
-        row.classList.add('silver-rank');
-      } else if (index === 2) {
-        row.classList.add('bronze-rank');
-      }
-
-      //check current user and highlight the cell if they aren't in the first 3 spots
-      if (score.display_name === '<%= locals.displayName %>' && index > 2) {
-        row.classList.add('current-user-cell');
-      }
-
+      // Style the row based on rank (Gold/Silver/Bronze) and current user
+      styleRankRow(row, index, score.display_name);
       tableBody.appendChild(row);
     });
   }
 
   function showToast(message) {
-    // Get the toast DIV
     var toast = document.getElementById("toast");
-    // Update the message
     toast.textContent = message;
-    // Add the "show" class
     toast.className = "show";
-    // After 3 seconds, make the toast go away
+    // Show toast for 3 seconds, then disappear
     setTimeout(function () { toast.className = toast.className.replace("show", ""); }, 3000);
+  }
+
+  function createCell(type, text, scope) {
+    const cell = document.createElement(type);
+    if (scope) {
+      cell.setAttribute('scope', scope);
+    }
+    cell.textContent = text;
+    return cell;
   }
 
   function createAchievementCell(achievements) {
@@ -186,6 +169,19 @@
     }
     timeCell.textContent = formattedTime;
     return timeCell;
+  }
+
+  function styleRankRow(row, index, displayName) {
+    if (index === 0) {
+      row.classList.add('gold-rank');
+    } else if (index === 1) {
+      row.classList.add('silver-rank');
+    } else if (index === 2) {
+      row.classList.add('bronze-rank');
+    }
+    if (displayName === '<%= locals.displayName %>' && index > 2) {
+      row.classList.add('current-user-cell');
+    }
   }
 
   // -----------------

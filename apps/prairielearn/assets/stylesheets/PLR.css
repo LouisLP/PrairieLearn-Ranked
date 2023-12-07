@@ -85,7 +85,7 @@ li {
 #seasonal-scoreboard,
 #all-time-scoreboard {
   overflow-y: scroll;
-  height: 100vh;
+  height: 1280px;
   animation: tableIntro 0.3s ease;
   scrollbar-width: thin; /* This is for Firefox */
   scrollbar-color: black transparent; /* Also for Firefox */
